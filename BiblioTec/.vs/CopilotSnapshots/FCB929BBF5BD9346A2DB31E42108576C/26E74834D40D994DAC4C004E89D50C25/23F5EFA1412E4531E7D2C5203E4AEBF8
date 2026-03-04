@@ -1,0 +1,155 @@
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using BiblioTec.Models;
+using BiblioTec.DTOs.Libros;
+using BiblioTec.Services.Interfaces;
+
+namespace BiblioTec.Services.Implementations
+{
+    public class LibroService : ILibroService
+    {
+        private readonly BibliotecaContext _context;
+        private readonly IMapper _mapper;
+
+        public LibroService(BibliotecaContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<LibroDto>> GetAllAsync()
+        {
+            var disponibilidad = await _context.Database
+                .SqlQuery<VwDisponibilidad>(
+                    $"SELECT LibroId AS LibroId, disponibles AS Disponibles FROM vw_disponibilidad")
+                .ToDictionaryAsync(v => v.LibroId, v => v.Disponibles);
+
+            var libros = await _context.Libros
+                .Include(l => l.LibroCategorias)
+                    .ThenInclude(lc => lc.Categoria)
+                .Where(l => l.Activo)
+                .ToListAsync();
+
+            var dtos = _mapper.Map<List<LibroDto>>(libros);
+
+            // Inyectar disponibles desde la vista
+            foreach (var dto in dtos)
+            {
+                dto.Disponibles = disponibilidad.TryGetValue(dto.LibroId, out var disp)
+                    ? disp : dto.TotalEjemplares;
+            }
+
+            return dtos;
+        }
+
+        public async Task<LibroDto> GetByIdAsync(int id)
+        {
+            var libro = await _context.Libros
+                .Include(l => l.LibroCategorias)
+                    .ThenInclude(lc => lc.Categoria)
+                .FirstOrDefaultAsync(l => l.LibroId == id)
+                ?? throw new KeyNotFoundException("Libro no encontrado.");
+
+            var dto = _mapper.Map<LibroDto>(libro);
+
+            // Disponibles desde la vista
+            var disponibilidad = await _context.Database
+                .SqlQuery<VwDisponibilidad>(
+                    $"SELECT LibroId, Disponibles FROM vw_disponibilidad WHERE LibroId = {id}")
+                .FirstOrDefaultAsync();
+
+            dto.Disponibles = disponibilidad?.Disponibles ?? libro.TotalEjemplares;
+
+            return dto;
+        }
+
+        public async Task<LibroDto> CreateAsync(LibroCreateDto dto)
+        {
+            var libro = _mapper.Map<Libro>(dto);
+
+            // Asignar categorías
+            if (dto.Categorias.Any())
+            {
+                var categorias = await _context.Categorias
+                    .Where(c => dto.Categorias.Contains(c.CategoriaId))
+                    .ToListAsync();
+
+                libro.LibroCategorias = categorias.Select(c => new LibroCategoria
+                {
+                    CategoriaId = c.CategoriaId
+                }).ToList();
+            }
+
+            _context.Libros.Add(libro);
+            await _context.SaveChangesAsync();
+
+            return await GetByIdAsync(libro.LibroId);
+        }
+
+        public async Task<LibroDto> UpdateAsync(int id, LibroUpdateDto dto)
+        {
+            var libro = await _context.Libros.FindAsync(id)
+                ?? throw new KeyNotFoundException("Libro no encontrado.");
+
+            _mapper.Map(dto, libro);
+            await _context.SaveChangesAsync();
+
+            return await GetByIdAsync(id);
+        }
+
+        public async Task UpdateEstadoAsync(int id, bool activo)
+        {
+            var libro = await _context.Libros.FindAsync(id)
+                ?? throw new KeyNotFoundException("Libro no encontrado.");
+
+            libro.Activo = activo;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var libro = await _context.Libros.FindAsync(id)
+                ?? throw new KeyNotFoundException("Libro no encontrado.");
+
+            _context.Libros.Remove(libro);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AsignarCategoriasAsync(int idLibro, List<int> categorias)
+        {
+            var libro = await _context.Libros
+                .Include(l => l.LibroCategorias)
+                .FirstOrDefaultAsync(l => l.LibroId == idLibro)
+                ?? throw new KeyNotFoundException("Libro no encontrado.");
+
+            // Reemplazar todas las categorías actuales
+            _context.LibroCategorias.RemoveRange(libro.LibroCategorias);
+
+            var nuevas = categorias.Select(idCat => new LibroCategoria
+            {
+                LibroId     = idLibro,
+                CategoriaId = idCat
+            });
+
+            await _context.LibroCategorias.AddRangeAsync(nuevas);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task QuitarCategoriaAsync(int idLibro, int idCategoria)
+        {
+            var relacion = await _context.LibroCategorias
+                .FindAsync(idLibro, idCategoria)
+                ?? throw new KeyNotFoundException("La categoría no está asignada a ese libro.");
+
+            _context.LibroCategorias.Remove(relacion);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    // Clase auxiliar para leer la vista vw_disponibilidad
+    internal class VwDisponibilidad
+    {
+        public int LibroId { get; set; }
+        public int Disponibles { get; set; }
+    }
+}

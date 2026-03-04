@@ -1,0 +1,100 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using BiblioTec.DTOs.Categorias;
+using BiblioTec.Services.Interfaces;
+
+namespace BiblioTec.Controllers
+{
+    [ApiController]
+    [Route("api/categorias")]
+    [Authorize]
+    public class CategoriasController : ControllerBase
+    {
+        private readonly ICategoriaService _categoriaService;
+
+        public CategoriasController(ICategoriaService categoriaService)
+        {
+            _categoriaService = categoriaService;
+        }
+
+        // GET api/categorias
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var categorias = await _categoriaService.GetAllAsync();
+            return Ok(new { success = true, data = categorias });
+        }
+
+        // GET api/categorias/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var categorias = await _categoriaService.GetAllAsync();
+                var categoria = categorias.FirstOrDefault(c => c.IdCategoria == id);
+
+                if (categoria == null)
+                    return NotFound(new { success = false, message = "Categoría no encontrada." });
+
+                return Ok(new { success = true, data = categoria });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // POST api/categorias
+        [HttpPost]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Create(CategoriaCreateDto dto)
+        {
+            try
+            {
+                var categoria = await _categoriaService.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetAll), new { success = true, data = categoria });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        // PUT api/categorias/{id}
+        [HttpPut("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Update(int id, CategoriaCreateDto dto)
+        {
+            try
+            {
+                var categoria = await _categoriaService.UpdateAsync(id, dto);
+                return Ok(new { success = true, data = categoria });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        // DELETE api/categorias/{id}
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _categoriaService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+    }
+}

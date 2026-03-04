@@ -1,0 +1,50 @@
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using BiblioTec.Models;
+using BiblioTec.Mappings;
+using BiblioTec.Services.Interfaces;
+using BiblioTec.Services.Implementations;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<BibliotecaContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddScoped<IAuthService,          AuthService>();
+builder.Services.AddScoped<IUsuarioService,       UsuarioService>();
+builder.Services.AddScoped<ILibroService,         LibroService>();
+builder.Services.AddScoped<ICategoriaService,     CategoriaService>();
+builder.Services.AddScoped<IPrestamoService,      PrestamoService>();
+builder.Services.AddScoped<INotificacionService,  NotificacionService>();
+builder.Services.AddScoped<IConfiguracionService, ConfiguracionService>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer           = true,
+            ValidateAudience         = true,
+            ValidateLifetime         = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer              = builder.Configuration["Jwt:Issuer"],
+            ValidAudience            = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey         = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        };
+    });
+
+builder.Services.AddAuthorization();
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
+app.Run();

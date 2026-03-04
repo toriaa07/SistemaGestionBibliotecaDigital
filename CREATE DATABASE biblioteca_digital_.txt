@@ -1,0 +1,134 @@
+CREATE DATABASE BibliotecaDigital;
+GO
+USE BibliotecaDigital;
+GO
+
+CREATE TABLE Usuarios (
+  UsuarioId INT IDENTITY(1,1) PRIMARY KEY,
+  Nombre VARCHAR(100) NOT NULL,
+  Correo VARCHAR(150) NOT NULL UNIQUE,
+  PasswordHash VARCHAR(255) NOT NULL,
+  Rol VARCHAR(10) NOT NULL CHECK (rol IN ('ADMIN','USUARIO')),
+  Estado VARCHAR(12) NOT NULL DEFAULT 'ACTIVO' CHECK (estado IN ('ACTIVO','SUSPENDIDO')),
+  FechaRegistro DATETIME NOT NULL DEFAULT (GETDATE())
+);
+GO
+
+
+CREATE TABLE Libros (
+  LibroId INT IDENTITY(1,1) PRIMARY KEY,
+  Titulo VARCHAR(200) NOT NULL,
+  Autor VARCHAR(150) NOT NULL,
+  Editorial VARCHAR(150) NULL,
+  Anio INT NULL,
+  RutaPdf VARCHAR(255) NOT NULL,
+  TotalEjemplares INT NOT NULL,
+  Activo BIT NOT NULL DEFAULT (1)
+);
+GO
+
+
+CREATE TABLE Categorias (
+  CategoriaId INT IDENTITY(1,1) PRIMARY KEY,
+  Nombre VARCHAR(100) NOT NULL UNIQUE
+);
+GO
+
+CREATE TABLE LibroCategorias (
+  LibroId INT NOT NULL,
+  CategoriaId INT NOT NULL,
+  PRIMARY KEY (LibroId, CategoriaId),
+  CONSTRAINT fk_lc_libro
+    FOREIGN KEY (LibroId) REFERENCES Libros(LibroId)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_lc_categoria
+    FOREIGN KEY (CategoriaId) REFERENCES Categorias(CategoriaId)
+    ON DELETE CASCADE
+);
+GO
+
+
+CREATE TABLE Configuraciones (
+  ConfigId INT PRIMARY KEY,
+  DiasPrestamo INT NOT NULL,
+  MaxPrestamosActivos INT NOT NULL,
+  NotificacionesActivas BIT NOT NULL DEFAULT (1)
+);
+GO
+CREATE TABLE Prestamos (
+  PrestamoId INT IDENTITY(1,1) PRIMARY KEY,
+  UsuarioId INT NOT NULL,
+  LibroId INT NOT NULL,
+  ConfigId INT NOT NULL,
+  FechaPrestamo DATETIME NOT NULL DEFAULT (GETDATE()),
+  FechaVencimiento DATETIME NOT NULL,
+  FechaDevolucion DATETIME NULL,
+  Estado VARCHAR(10) NOT NULL DEFAULT 'ACTIVO' CHECK (estado IN ('ACTIVO','DEVUELTO','VENCIDO')),
+  CONSTRAINT fk_p_usuario
+    FOREIGN KEY (UsuarioId) REFERENCES Usuarios(UsuarioId)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_p_libro
+    FOREIGN KEY (LibroId) REFERENCES Libros(LibroId)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_p_config
+    FOREIGN KEY (ConfigId) REFERENCES Configuraciones(ConfigId)
+    ON DELETE CASCADE
+);
+GO
+CREATE TABLE Notificaciones (
+  NotificacionId INT IDENTITY(1,1) PRIMARY KEY,
+  UsuarioId INT NOT NULL,
+  Tipo VARCHAR(15) NOT NULL CHECK (tipo IN ('VENCIMIENTO','RECORDATORIO','SISTEMA')),
+  Mensaje VARCHAR(MAX) NOT NULL,
+  FechaEnvio DATETIME NOT NULL DEFAULT (GETDATE()),
+  Leida BIT NOT NULL DEFAULT (0),
+  CONSTRAINT fk_n_usuario
+    FOREIGN KEY (UsuarioId) REFERENCES Usuarios(UsuarioId)
+    ON DELETE CASCADE
+);
+GO
+
+CREATE OR ALTER VIEW vw_disponibilidad AS
+SELECT
+  l.LibroId,
+  l.Titulo,
+  l.Autor,
+  l.TotalEjemplares,
+  (l.TotalEjemplares - COUNT(p.PrestamoId)) AS disponibles
+FROM Libros l
+LEFT JOIN Prestamos p
+  ON p.LibroID = l.LibroId
+ AND p.Estado = 'ACTIVO'
+WHERE l.Activo = 1
+GROUP BY l.LibroId, l.Titulo, l.Autor, l.TotalEjemplares;
+GO
+
+INSERT INTO Configuraciones (ConfigId, DiasPrestamo, MaxPrestamosActivos, NotificacionesActivas)
+  VALUES (1, 10, 3, 1);
+
+INSERT INTO Libros (Titulo, Autor, Editorial, Anio, RutaPdf, TotalEjemplares, Activo)
+VALUES 
+('GcMODU300 - 3.1 Guía 1 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'https://colegioespanolpadrearrup153-my.sharepoint.com/:b:/g/personal/lp190136_colegiopadrearrupe_edu_sv/IQDgF2u1u0BrQLAc9Q1D9zyMAYWDfv2_O5LRebI0aG7YhNc', 10, 1),
+('GcMODU300 - 3.1 Guía 2 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'https://colegioespanolpadrearrup153-my.sharepoint.com/:b:/g/personal/lp190136_colegiopadrearrupe_edu_sv/IQAzdQnhXQEfRLedq23MX5slAbuDDgPrgVTIG-QlenM_UTw', 10, 1),
+('GcMODU300 - 3.1 Guía 3 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'https://colegioespanolpadrearrup153-my.sharepoint.com/:b:/g/personal/lp190136_colegiopadrearrupe_edu_sv/IQD66_6TQMCfR7oALX97yvJpAZJxPghjLUXTK9Lo-r0UUfo', 10, 1),
+('GcMODU300 - 3.1 Guía 4 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'https://colegioespanolpadrearrup153-my.sharepoint.com/:b:/g/personal/lp190136_colegiopadrearrupe_edu_sv/IQC8WDcxnlvOQ6GlWAxAeqOIAUXuPjaAUasHuxDeHEAUa4E', 10, 1),
+('GcMODU300 - 3.1 Guía 5 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'https://colegioespanolpadrearrup153-my.sharepoint.com/:b:/g/personal/lp190136_colegiopadrearrupe_edu_sv/IQBQrsag4bY3SbbXm1Q2pxfqAdIItXDZDi9goSE9wLEgmBI', 10, 1),
+('GcMODU300 - 3.1 Guía 6 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'https://colegioespanolpadrearrup153-my.sharepoint.com/:b:/g/personal/lp190136_colegiopadrearrupe_edu_sv/IQABzckHf8cFQpzQ_KJGN1o7Ac8lU_WN_MBnix1l6EOu_RU', 10, 1),
+('GcMODU300 - 3.1 Guía 7 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'https://colegioespanolpadrearrup153-my.sharepoint.com/:b:/g/personal/lp190136_colegiopadrearrupe_edu_sv/IQBxMXk375EYR6sBPiDBZUY1AZOuaGvp4_aT7-6r0nDgOc8', 10, 1),
+('GcMODU300 - 3.1 Guía 8 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'https://colegioespanolpadrearrup153-my.sharepoint.com/:b:/g/personal/lp190136_colegiopadrearrupe_edu_sv/IQB7V8pGQ8DxQokNV8X1nSGzAXzchz15MsEHFAuTysHmP50', 10, 1),
+('GcMODU300 - 3.1 Guía 9 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'https://colegioespanolpadrearrup153-my.sharepoint.com/:b:/g/personal/lp190136_colegiopadrearrupe_edu_sv/IQAp5qLqTODqS4QwEa8DS5fcAVhgxsrazp2mTOXcTd6R1Kw', 10, 1),
+('GcMODU300 - 3.1 Guía 10 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026,'https://colegioespanolpadrearrup153-my.sharepoint.com/:b:/g/personal/lp190136_colegiopadrearrupe_edu_sv/IQBgvCRtXuoGTbaeELwa3oYSAUndotY3tu_2C9w57UDd6H8', 10, 1);
+
+INSERT INTO Categorias (Nombre)
+VALUES
+('Guías Académicas'),
+('Literatura'),
+('Historia'),
+('Tecnología'),
+('Ciencia');
+
+
+INSERT INTO LibroCategorias (LibroId, CategoriaId)
+VALUES
+(1,1),(2,1),(3,1),(4,1),(5,1),
+(6,1),(7,1),(8,1),(9,1),(10,1);

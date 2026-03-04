@@ -1,0 +1,167 @@
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using BiblioTec.Models;
+using BiblioTec.DTOs.Prestamos;
+using BiblioTec.Services.Interfaces;
+
+namespace BiblioTec.Services.Implementations
+{
+    public class PrestamoService : IPrestamoService
+    {
+        private readonly BibliotecaContext _context;
+        private readonly IMapper _mapper;
+
+        public PrestamoService(BibliotecaContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<PrestamoDto>> GetAllAsync()
+        {
+            var prestamos = await _context.Prestamos
+                .Include(p => p.Usuario)
+                .Include(p => p.Libro)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<PrestamoDto>>(prestamos);
+        }
+
+        public async Task<PrestamoDto> GetByIdAsync(int id)
+        {
+            var prestamo = await _context.Prestamos
+                .Include(p => p.Usuario)
+                .Include(p => p.Libro)
+                .FirstOrDefaultAsync(p => p.PrestamoId == id)
+                ?? throw new KeyNotFoundException("Préstamo no encontrado.");
+
+            return _mapper.Map<PrestamoDto>(prestamo);
+        }
+
+        public async Task<IEnumerable<PrestamoResumenDto>> GetByUsuarioAsync(int idUsuario)
+        {
+            var prestamos = await _context.Prestamos
+                .Include(p => p.Libro)
+                .Where(p => p.UsuarioId == idUsuario)
+                .OrderByDescending(p => p.FechaPrestamo)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<PrestamoResumenDto>>(prestamos);
+        }
+
+        public async Task<PrestamoDto> CrearAsync(PrestamoCreateDto dto, int idUsuario)
+        {
+            // 1. Verificar que el usuario existe y está activo
+            var usuario = await _context.Usuarios.FindAsync(idUsuario)
+                ?? throw new KeyNotFoundException("Usuario no encontrado.");
+
+            if (usuario.Estado == "SUSPENDIDO")
+                throw new InvalidOperationException("Tu cuenta está suspendida.");
+
+            // 2. Verificar que el libro existe y está activo
+            var libro = await _context.Libros.FindAsync(dto.IdLibro)
+                ?? throw new KeyNotFoundException("Libro no encontrado.");
+
+            if (!libro.Activo)
+                throw new InvalidOperationException("El libro no está disponible.");
+
+            // 3. Obtener configuración
+            var config = await _context.Configuraciones.FindAsync(1)
+                ?? throw new InvalidOperationException("No se encontró la configuración del sistema.");
+
+            // 4. Verificar que el usuario no excedió el límite de préstamos activos
+            var prestamosActivos = await _context.Prestamos
+                .CountAsync(p => p.UsuarioId == idUsuario && p.Estado == "ACTIVO");
+
+            if (prestamosActivos >= config.MaxPrestamosActivos)
+                throw new InvalidOperationException(
+                    $"Has alcanzado el límite de {config.MaxPrestamosActivos} préstamos activos.");
+
+            // 5. Verificar disponibilidad de ejemplares
+            var ejemplaresPrestados = await _context.Prestamos
+                .CountAsync(p => p.LibroId == dto.IdLibro && p.Estado == "ACTIVO");
+
+            if (ejemplaresPrestados >= libro.TotalEjemplares)
+                throw new InvalidOperationException("No hay ejemplares disponibles de este libro.");
+
+            // 6. Verificar que el usuario no tenga ya ese libro prestado
+            var yaTienePrestado = await _context.Prestamos
+                .AnyAsync(p => p.UsuarioId == idUsuario
+                            && p.LibroId == dto.IdLibro
+                            && p.Estado == "ACTIVO");
+
+            if (yaTienePrestado)
+                throw new InvalidOperationException("Ya tienes este libro en préstamo.");
+
+            // 7. Crear el préstamo
+            var prestamo = new Prestamo
+            {
+                UsuarioId        = idUsuario,
+                LibroId          = dto.IdLibro,
+                IdConfig         = config.ConfigId,
+                FechaPrestamo    = DateTime.Now,
+                FechaVencimiento = DateTime.Now.AddDays(config.DiasPrestamo),
+                Estado           = "ACTIVO"
+            };
+
+            _context.Prestamos.Add(prestamo);
+
+            // 8. Crear notificación automática si está habilitado
+            if (config.NotificacionesActivas)
+            {
+                _context.Notificaciones.Add(new Notificacion
+                {
+                    UsuarioId  = idUsuario,
+                    Tipo       = "RECORDATORIO",
+                    Mensaje    = $"Préstamo de \"{libro.Titulo}\" creado. " +
+                                 $"Fecha de vencimiento: {prestamo.FechaVencimiento:dd/MM/yyyy}.",
+                    FechaEnvio = DateTime.Now,
+                    Leida      = false
+                });
+            }
+
+            await _context.SaveChangesAsync();
+
+            return await GetByIdAsync(prestamo.PrestamoId);
+        }
+
+        public async Task DevolverAsync(int id)
+        {
+            var prestamo = await _context.Prestamos.FindAsync(id)
+                ?? throw new KeyNotFoundException("Préstamo no encontrado.");
+
+            if (prestamo.Estado == "DEVUELTO")
+                throw new InvalidOperationException("Este préstamo ya fue devuelto.");
+
+            prestamo.Estado           = "DEVUELTO";
+            prestamo.FechaDevolucion  = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task MarcarVencidosAsync()
+        {
+            var vencidos = await _context.Prestamos
+                .Where(p => p.Estado == "ACTIVO" && p.FechaVencimiento < DateTime.Now)
+                .ToListAsync();
+
+            foreach (var prestamo in vencidos)
+            {
+                prestamo.Estado = "VENCIDO";
+
+                // Notificar al usuario
+                _context.Notificaciones.Add(new Notificacion
+                {
+                    UsuarioId  = prestamo.UsuarioId,
+                    Tipo       = "VENCIMIENTO",
+                    Mensaje    = $"Tu préstamo con ID #{prestamo.PrestamoId} ha vencido. " +
+                                 $"Por favor, realiza la devolución.",
+                    FechaEnvio = DateTime.Now,
+                    Leida      = false
+                });
+            }
+
+            await _context.SaveChangesAsync();
+        }
+    }
+}

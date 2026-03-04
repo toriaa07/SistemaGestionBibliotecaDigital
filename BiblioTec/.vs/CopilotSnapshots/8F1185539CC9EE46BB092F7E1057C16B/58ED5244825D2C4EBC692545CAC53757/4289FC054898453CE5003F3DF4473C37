@@ -1,0 +1,100 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using BiblioTec.DTOs.Configuracion;
+using BiblioTec.Services.Interfaces;
+
+namespace BiblioTec.Controllers
+{
+    [ApiController]
+    [Route("api/configuraciones")]
+    [Authorize(Roles = "ADMIN")]
+    public class ConfiguracionController : ControllerBase
+    {
+        private readonly IConfiguracionService _configuracionService;
+
+        public ConfiguracionController(IConfiguracionService configuracionService)
+        {
+            _configuracionService = configuracionService;
+        }
+
+        // GET api/configuraciones
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var config = await _configuracionService.GetAsync();
+                return Ok(new { success = true, data = config });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // GET api/configuraciones/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var config = await _configuracionService.GetByIdAsync(id);
+                return Ok(new { success = true, data = config });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // POST api/configuraciones
+        [HttpPost]
+        public async Task<IActionResult> Create(ConfiguracionDto dto)
+        {
+            try
+            {
+                var config = await _configuracionService.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = config.IdConfiguracion },
+                    new { success = true, data = config });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        // PUT api/configuraciones/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, ConfiguracionDto dto)
+        {
+            try
+            {
+                var config = await _configuracionService.UpdateAsync(id, dto);
+                return Ok(new { success = true, data = config });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        // DELETE api/configuraciones/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _configuracionService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+    }
+}

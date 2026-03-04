@@ -1,0 +1,83 @@
+@startuml
+left to right direction
+
+actor "Administrador" as Admin
+actor "Usuario" as User
+
+rectangle "Sistema de Gestión de Biblioteca Digital" {
+
+  (Iniciar sesión) as UC_Login
+  (Cerrar sesión) as UC_Logout
+
+  ' --- Admin: Libros ---
+  (Agregar libro PDF) as UC_AddBook
+  (Editar información de libro) as UC_EditBook
+  (Eliminar libro) as UC_DeleteBook
+  (Subir/Reemplazar PDF) as UC_ReplacePDF
+  (Asignar categorías/etiquetas) as UC_Tags
+
+  ' --- Admin: Usuarios ---
+  (Suspender/Eliminar usuario) as UC_BlockUser
+  (Restablecer contraseña de usuario) as UC_ResetPwd
+
+  ' --- Préstamos ---
+  (Ver préstamos actuales y disponibilidad) as UC_ViewLoans
+  (Configurar políticas de préstamo) as UC_Policies
+
+  ' --- Sistema ---
+  (Configurar notificaciones) as UC_Notify
+  (Administrar copias de seguridad) as UC_Backups
+
+  ' --- Usuario (JavaFX) ---
+  (Ver catálogo) as UC_Catalog
+  (Buscar por nombre/autor) as UC_Search
+  (Filtrar por categoría) as UC_Filter
+  (Prestar libro) as UC_Borrow
+  (Ver mis préstamos) as UC_MyLoans
+  (Devolver libro) as UC_Return
+  (Ver historial) as UC_History
+  (Ver perfil) as UC_Profile
+  (Cambiar contraseña) as UC_ChangePwd
+
+  ' --- Web lectura ---
+  (Leer libro prestado en la web) as UC_ReadWeb
+  (Validar acceso a lectura) as UC_ValidateRead
+}
+
+' Relaciones comunes
+Admin --> UC_Login
+User --> UC_Login
+Admin --> UC_Logout
+User --> UC_Logout
+
+' Admin
+Admin --> UC_AddBook
+Admin --> UC_EditBook
+Admin --> UC_DeleteBook
+Admin --> UC_ReplacePDF
+Admin --> UC_Tags
+Admin --> UC_BlockUser
+Admin --> UC_ResetPwd
+Admin --> UC_ViewLoans
+Admin --> UC_Policies
+Admin --> UC_Notify
+Admin --> UC_Backups
+
+' Usuario app
+User --> UC_Catalog
+User --> UC_Search
+User --> UC_Filter
+User --> UC_Borrow
+User --> UC_MyLoans
+User --> UC_Return
+User --> UC_History
+User --> UC_Profile
+User --> UC_ChangePwd
+
+' Web lectura
+User --> UC_ReadWeb
+UC_ReadWeb .> UC_ValidateRead : <<include>>
+UC_Borrow .> UC_MyLoans : <<include>>
+UC_Return .> UC_MyLoans : <<include>>
+
+@enduml

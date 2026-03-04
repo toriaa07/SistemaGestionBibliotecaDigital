@@ -1,0 +1,88 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using BiblioTec.Services.Interfaces;
+
+namespace BiblioTec.Controllers
+{
+    [ApiController]
+    [Route("api/libro-categorias")]
+    [Authorize]
+    public class LibroCategoriaController : ControllerBase
+    {
+        private readonly ILibroService _libroService;
+
+        public LibroCategoriaController(ILibroService libroService)
+        {
+            _libroService = libroService;
+        }
+
+        // GET api/libro-categorias (listar asociaciones)
+        [HttpGet]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetAll([FromQuery] int? idLibro = null, [FromQuery] int? idCategoria = null)
+        {
+            try
+            {
+                // Obtener todos los libros y sus categorías
+                var libros = await _libroService.GetAllAsync();
+
+                var asociaciones = libros
+                    .SelectMany(l => l.Categorias.Select(c => new { idLibro = l.IdLibro, categoria = c }))
+                    .ToList();
+
+                // Aplicar filtros
+                if (idLibro.HasValue)
+                    asociaciones = asociaciones.Where(a => a.idLibro == idLibro.Value).ToList();
+
+                if (idCategoria.HasValue)
+                    asociaciones = asociaciones.Where(a => a.categoria == idCategoria.Value.ToString()).ToList();
+
+                return Ok(new { success = true, data = asociaciones });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        // POST api/libro-categorias (asociar libro a categoría)
+        [HttpPost]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Associate(int idLibro, int idCategoria)
+        {
+            try
+            {
+                await _libroService.AsignarCategoriasAsync(idLibro, new List<int> { idCategoria });
+                return CreatedAtAction(nameof(GetAll), 
+                    new { success = true, data = new { idLibro, idCategoria }, message = "Categoría asociada correctamente." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        // DELETE api/libro-categorias (eliminar asociación)
+        [HttpDelete]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Disassociate([FromQuery] int idLibro, [FromQuery] int idCategoria)
+        {
+            try
+            {
+                if (idLibro <= 0 || idCategoria <= 0)
+                    return BadRequest(new { success = false, message = "idLibro e idCategoria son requeridos." });
+
+                await _libroService.QuitarCategoriaAsync(idLibro, idCategoria);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+    }
+}

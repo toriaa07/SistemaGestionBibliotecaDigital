@@ -1,0 +1,16 @@
+﻿using BiblioTec.DTOs.Prestamos;
+
+namespace BiblioTec.Services.Interfaces
+{
+    public interface IPrestamoService
+    {
+        Task<IEnumerable<PrestamoDto>> GetAllAsync();
+        Task<PrestamoDto> GetByIdAsync(int id);
+        Task<IEnumerable<PrestamoResumenDto>> GetByUsuarioAsync(int idUsuario);
+        Task<PrestamoDto> CrearAsync(PrestamoCreateDto dto, int idUsuario);
+        Task DevolverAsync(int id);
+        Task UpdateEstadoAsync(int id, string estado);
+        Task DeleteAsync(int id);
+        Task MarcarVencidosAsync();
+    }
+}

@@ -1,0 +1,123 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using BiblioTec.DTOs.Notificaciones;
+using BiblioTec.Services.Interfaces;
+
+namespace BiblioTec.Controllers
+{
+    [ApiController]
+    [Route("api/notificaciones")]
+    [Authorize]
+    public class NotificacionesController : ControllerBase
+    {
+        private readonly INotificacionService _notificacionService;
+
+        public NotificacionesController(INotificacionService notificacionService)
+        {
+            _notificacionService = notificacionService;
+        }
+
+        // GET api/notificaciones (listar todas, solo ADMIN)
+        [HttpGet]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetAll([FromQuery] int? idUsuario = null, [FromQuery] bool? leida = null)
+        {
+            // Necesitaría GetAllAsync implementado en INotificacionService
+            // Por ahora retornar respuesta vacía
+            return Ok(new { success = true, data = new List<object>() });
+        }
+
+        // GET api/notificaciones/mis-notificaciones
+        [HttpGet("mis-notificaciones")]
+        public async Task<IActionResult> GetMisNotificaciones([FromQuery] bool? leida = null)
+        {
+            var idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var notificaciones = await _notificacionService.GetByUsuarioAsync(idUsuario);
+
+            if (leida.HasValue)
+                notificaciones = notificaciones.Where(n => n.Leida == leida.Value).ToList();
+
+            return Ok(new { success = true, data = notificaciones });
+        }
+
+        // GET api/notificaciones/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var notificaciones = await _notificacionService.GetByUsuarioAsync(idUsuario);
+                var notificacion = notificaciones.FirstOrDefault(n => n.IdNotificacion == id);
+                
+                if (notificacion == null)
+                    return NotFound(new { success = false, message = "Notificación no encontrada." });
+                
+                return Ok(new { success = true, data = notificacion });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // PATCH api/notificaciones/{id}/leer
+        [HttpPatch("{id}/leer")]
+        public async Task<IActionResult> MarcarLeida(int id)
+        {
+            try
+            {
+                var idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                await _notificacionService.MarcarLeidaAsync(id, idUsuario);
+                return Ok(new { success = true, message = "Notificación marcada como leída." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // PATCH api/notificaciones/leer-todas
+        [HttpPatch("leer-todas")]
+        public async Task<IActionResult> MarcarTodasLeidas()
+        {
+            var idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _notificacionService.MarcarTodasLeidasAsync(idUsuario);
+            return Ok(new { success = true, message = "Todas las notificaciones marcadas como leídas." });
+        }
+
+        // POST api/notificaciones  (solo ADMIN)
+        [HttpPost]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Create(NotificacionCreateDto dto)
+        {
+            try
+            {
+                var notificacion = await _notificacionService.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetMisNotificaciones),
+                    new { success = true, data = notificacion });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // DELETE api/notificaciones/{id}  (solo ADMIN)
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _notificacionService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+    }
+}

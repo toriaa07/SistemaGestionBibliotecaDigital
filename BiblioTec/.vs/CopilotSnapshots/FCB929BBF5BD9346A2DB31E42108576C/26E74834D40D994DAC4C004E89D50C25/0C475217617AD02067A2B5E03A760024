@@ -1,0 +1,150 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using BiblioTec.DTOs.Categorias;
+using BiblioTec.DTOs.Libros;
+using BiblioTec.Services.Interfaces;
+
+namespace BiblioTec.Controllers
+{
+    [ApiController]
+    [Route("api/libros")]
+    [Authorize]
+    public class LibrosController : ControllerBase
+    {
+        private readonly ILibroService _libroService;
+
+        public LibrosController(ILibroService libroService)
+        {
+            _libroService = libroService;
+        }
+
+        // GET api/libros
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] string? q = null, [FromQuery] bool? activo = null)
+        {
+            var libros = await _libroService.GetAllAsync();
+
+            // Aplicar filtros
+            if (!string.IsNullOrEmpty(q))
+                libros = libros.Where(l => 
+                    l.Titulo.Contains(q, StringComparison.OrdinalIgnoreCase) || 
+                    l.Autor.Contains(q, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            if (activo.HasValue)
+                libros = libros.Where(l => l.Activo == activo.Value).ToList();
+
+            return Ok(new { success = true, data = libros });
+        }
+
+        // GET api/libros/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var libro = await _libroService.GetByIdAsync(id);
+                return Ok(new { success = true, data = libro });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // POST api/libros
+        [HttpPost]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Create(LibroCreateDto dto)
+        {
+            try
+            {
+                var libro = await _libroService.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = libro.IdLibro },
+                    new { success = true, data = libro });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        // PUT api/libros/{id}
+        [HttpPut("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Update(int id, LibroUpdateDto dto)
+        {
+            try
+            {
+                var libro = await _libroService.UpdateAsync(id, dto);
+                return Ok(new { success = true, data = libro });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // PATCH api/libros/{id}/estado
+        [HttpPatch("{id}/estado")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> UpdateEstado(int id, [FromBody] bool activo)
+        {
+            try
+            {
+                await _libroService.UpdateEstadoAsync(id, activo);
+                var estado = activo ? "activado" : "desactivado";
+                return Ok(new { success = true, message = $"Libro {estado} correctamente." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // DELETE api/libros/{id}
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _libroService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // POST api/libros/{id}/categorias
+        [HttpPost("{id}/categorias")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> AsignarCategorias(int id, LibroCategoriaDto dto)
+        {
+            try
+            {
+                await _libroService.AsignarCategoriasAsync(id, dto.Categorias);
+                return Ok(new { success = true, message = "Categorías asignadas correctamente." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+        [HttpDelete("{id}/categorias/{idCat}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> QuitarCategoria(int id, int idCat)
+        {
+            try
+            {
+                await _libroService.QuitarCategoriaAsync(id, idCat);
+                return Ok(new { success = true, message = "Categoría removida correctamente." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+    }
+}

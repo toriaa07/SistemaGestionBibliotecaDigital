@@ -1,0 +1,50 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using BiblioTec.DTOs.Configuracion;
+using BiblioTec.Services.Interfaces;
+
+namespace BiblioTec.Controllers
+{
+    [ApiController]
+    [Route("api/configuracion")]
+    [Authorize(Roles = "ADMIN")]
+    public class ConfiguracionController : ControllerBase
+    {
+        private readonly IConfiguracionService _configuracionService;
+
+        public ConfiguracionController(IConfiguracionService configuracionService)
+        {
+            _configuracionService = configuracionService;
+        }
+
+        // GET api/configuracion
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                var config = await _configuracionService.GetAsync();
+                return Ok(new { success = true, data = config });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // PUT api/configuracion
+        [HttpPut]
+        public async Task<IActionResult> Update(ConfiguracionDto dto)
+        {
+            try
+            {
+                var config = await _configuracionService.UpdateAsync(dto);
+                return Ok(new { success = true, data = config });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+    }
+}

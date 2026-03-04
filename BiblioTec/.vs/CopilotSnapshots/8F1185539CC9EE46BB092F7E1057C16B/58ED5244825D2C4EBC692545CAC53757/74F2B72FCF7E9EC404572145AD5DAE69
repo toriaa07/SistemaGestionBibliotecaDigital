@@ -1,0 +1,88 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using BiblioTec.DTOs.Notificaciones;
+using BiblioTec.Services.Interfaces;
+
+namespace BiblioTec.Controllers
+{
+    [ApiController]
+    [Route("api/notificaciones")]
+    [Authorize]
+    public class NotificacionesController : ControllerBase
+    {
+        private readonly INotificacionService _notificacionService;
+
+        public NotificacionesController(INotificacionService notificacionService)
+        {
+            _notificacionService = notificacionService;
+        }
+
+        // GET api/notificaciones/mis-notificaciones
+        [HttpGet("mis-notificaciones")]
+        public async Task<IActionResult> GetMisNotificaciones()
+        {
+            var idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var notificaciones = await _notificacionService.GetByUsuarioAsync(idUsuario);
+            return Ok(new { success = true, data = notificaciones });
+        }
+
+        // PATCH api/notificaciones/{id}/leer
+        [HttpPatch("{id}/leer")]
+        public async Task<IActionResult> MarcarLeida(int id)
+        {
+            try
+            {
+                var idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                await _notificacionService.MarcarLeidaAsync(id, idUsuario);
+                return Ok(new { success = true, message = "Notificación marcada como leída." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // PATCH api/notificaciones/leer-todas
+        [HttpPatch("leer-todas")]
+        public async Task<IActionResult> MarcarTodasLeidas()
+        {
+            var idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            await _notificacionService.MarcarTodasLeidasAsync(idUsuario);
+            return Ok(new { success = true, message = "Todas las notificaciones marcadas como leídas." });
+        }
+
+        // POST api/notificaciones  (solo ADMIN)
+        [HttpPost]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Create(NotificacionCreateDto dto)
+        {
+            try
+            {
+                var notificacion = await _notificacionService.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetMisNotificaciones),
+                    new { success = true, data = notificacion });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+
+        // DELETE api/notificaciones/{id}  (solo ADMIN)
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _notificacionService.DeleteAsync(id);
+                return Ok(new { success = true, message = "Notificación eliminada correctamente." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { success = false, message = ex.Message });
+            }
+        }
+    }
+}

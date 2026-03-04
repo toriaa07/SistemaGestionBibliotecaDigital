@@ -1,0 +1,34 @@
+namespace BiblioTec.DTOs.Prestamos
+{
+    public class PrestamoDto
+    {
+        public int IdPrestamo { get; set; }
+
+        public int IdUsuario { get; set; }
+        public string NombreUsuario { get; set; }
+
+        public int IdLibro { get; set; }
+        public string TituloLibro { get; set; }
+        public string AutorLibro { get; set; }
+
+        public DateTime FechaPrestamo { get; set; }
+        public DateTime FechaVencimiento { get; set; }
+        public DateTime? FechaDevolucion { get; set; }
+
+        public string Estado { get; set; }
+    }
+
+    
+    public class PrestamoCreateDto
+    {
+        public int IdLibro { get; set; }
+    }
+
+    public class PrestamoResumenDto
+    {
+        public int IdPrestamo { get; set; }
+        public string TituloLibro { get; set; }
+        public DateTime FechaVencimiento { get; set; }
+        public string Estado { get; set; }
+    }
+}
