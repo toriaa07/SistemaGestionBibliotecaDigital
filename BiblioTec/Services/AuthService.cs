@@ -40,6 +40,7 @@ namespace BiblioTec.Services.Implementations
 
             return new LoginResponseDto
             {
+                IdUsuario = usuario.UsuarioId,
                 Token = GenerarToken(usuario),
                 Nombre = usuario.Nombre,
                 Correo = usuario.Correo,
@@ -47,15 +48,16 @@ namespace BiblioTec.Services.Implementations
             };
         }
 
-        public async Task<UsuarioDto> RegisterAsync(UsuarioRegisterDto dto) { 
+        public async Task<UsuarioDto> RegisterAsync(UsuarioRegisterDto dto)
+        {
             var existe = await _context.Usuarios.AnyAsync(u => u.Correo == dto.Correo);
 
             if (existe) throw new InvalidOperationException("Ya existe un usuario con ese correo.");
             var usuario = _mapper.Map<Usuario>(dto);
-            usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password); 
-            _context.Usuarios.Add(usuario); 
-            await _context.SaveChangesAsync(); 
-            return _mapper.Map<UsuarioDto>(usuario); 
+            usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            _context.Usuarios.Add(usuario);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<UsuarioDto>(usuario);
         }
 
         public async Task ChangePasswordAsync(int idUsuario, UsuarioChangePasswordDto dto)
@@ -69,7 +71,6 @@ namespace BiblioTec.Services.Implementations
             usuario.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.PasswordNueva);
             await _context.SaveChangesAsync();
         }
-
 
         private string GenerarToken(Usuario usuario)
         {
@@ -87,10 +88,10 @@ namespace BiblioTec.Services.Implementations
             };
 
             var token = new JwtSecurityToken(
-                issuer:   _config["Jwt:Issuer"],
+                issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
-                claims:   claims,
-                expires:  DateTime.UtcNow.AddHours(8),
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(8),
                 signingCredentials: creds
             );
 
