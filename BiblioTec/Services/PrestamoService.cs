@@ -59,7 +59,7 @@ namespace BiblioTec.Services.Implementations
                 throw new InvalidOperationException("Tu cuenta está suspendida.");
 
             // 2. Verificar que el libro existe y está activo
-            var libro = await _context.Libros.FindAsync(dto.IdLibro)
+            var libro = await _context.Libros.FindAsync(dto.LibroId)
                 ?? throw new KeyNotFoundException("Libro no encontrado.");
 
             if (!libro.Activo)
@@ -79,7 +79,7 @@ namespace BiblioTec.Services.Implementations
 
             // 5. Verificar disponibilidad de ejemplares
             var ejemplaresPrestados = await _context.Prestamos
-                .CountAsync(p => p.LibroId == dto.IdLibro && p.Estado == "ACTIVO");
+                .CountAsync(p => p.LibroId == dto.LibroId && p.Estado == "ACTIVO");
 
             if (ejemplaresPrestados >= libro.TotalEjemplares)
                 throw new InvalidOperationException("No hay ejemplares disponibles de este libro.");
@@ -87,7 +87,7 @@ namespace BiblioTec.Services.Implementations
             // 6. Verificar que el usuario no tenga ya ese libro prestado
             var yaTienePrestado = await _context.Prestamos
                 .AnyAsync(p => p.UsuarioId == idUsuario
-                            && p.LibroId == dto.IdLibro
+                            && p.LibroId == dto.LibroId
                             && p.Estado == "ACTIVO");
 
             if (yaTienePrestado)
@@ -97,7 +97,7 @@ namespace BiblioTec.Services.Implementations
             var prestamo = new Prestamo
             {
                 UsuarioId        = idUsuario,
-                LibroId          = dto.IdLibro,
+                LibroId          = dto.LibroId,
                 ConfigId         = config.ConfigId,
                 FechaPrestamo    = DateTime.Now,
                 FechaVencimiento = DateTime.Now.AddDays(config.DiasPrestamo),

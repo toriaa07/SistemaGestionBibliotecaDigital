@@ -10,7 +10,7 @@ namespace BiblioTec.Services.Interfaces
         Task<LibroDto> UpdateAsync(int id, LibroUpdateDto dto);
         Task UpdateEstadoAsync(int id, bool activo);
         Task DeleteAsync(int id);
-        Task AsignarCategoriasAsync(int idLibro, List<int> categorias);
-        Task QuitarCategoriaAsync(int idLibro, int idCategoria);
+        Task AsignarCategoriasAsync(int LibroId, List<int> categorias);
+        Task QuitarCategoriaAsync(int LibroId, int idCategoria);
     }
 }

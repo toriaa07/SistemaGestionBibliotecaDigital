@@ -1,0 +1,1175 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BiblioTec — Lector Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-deep: #1a3c34;
+            --green-mid: #2d6a4f;
+            --green-light: #40916c;
+            --green-pale: #b7e4c7;
+            --cream: #faf8f0;
+            --gold: #c9a84c;
+            --gold-light: #e8d593;
+            --red-soft: #c0392b;
+            --red-hover: #a93226;
+            --text-dark: #1a1a1a;
+            --text-mid: #555;
+            --text-light: #888;
+            --shadow-md: 0 4px 16px rgba(0,0,0,.1);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,.15);
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #loginSection {
+            display: flex;
+            min-height: 100vh;
+            animation: fadeIn .5s ease;
+        }
+
+        .login-left {
+            flex: 1;
+            background: var(--green-deep);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .login-left::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(ellipse at 20% 80%, rgba(45,106,79,.4) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(201,168,76,.15) 0%, transparent 50%);
+                pointer-events: none;
+            }
+
+            .login-left .brand {
+                position: relative;
+                z-index: 1;
+                text-align: center;
+            }
+
+            .login-left .brand-icon {
+                width: 72px;
+                height: 72px;
+                background: var(--gold);
+                border-radius: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1.5rem;
+                font-size: 2rem;
+                color: var(--green-deep);
+                box-shadow: 0 4px 20px rgba(201,168,76,.35);
+            }
+
+            .login-left h1 {
+                font-family: 'DM Serif Display', serif;
+                font-size: 2.8rem;
+                color: #fff;
+                letter-spacing: -0.5px;
+                margin-bottom: .5rem;
+            }
+
+            .login-left p {
+                color: var(--green-pale);
+                font-size: 1.05rem;
+                opacity: .85;
+            }
+
+        .login-decoration {
+            position: absolute;
+            bottom: -60px;
+            right: -60px;
+            width: 280px;
+            height: 280px;
+            border: 2px solid rgba(255,255,255,.06);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+            .login-decoration:nth-child(3) {
+                width: 180px;
+                height: 180px;
+                bottom: auto;
+                right: auto;
+                top: -40px;
+                left: -40px;
+            }
+
+        .login-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            background: var(--cream);
+        }
+
+        .login-form-wrapper {
+            width: 100%;
+            max-width: 400px;
+        }
+
+            .login-form-wrapper h2 {
+                font-family: 'DM Serif Display', serif;
+                font-size: 1.8rem;
+                margin-bottom: .4rem;
+                color: var(--green-deep);
+            }
+
+            .login-form-wrapper .subtitle {
+                color: var(--text-light);
+                margin-bottom: 2rem;
+                font-size: .95rem;
+            }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+            .form-group label {
+                display: block;
+                font-size: .85rem;
+                font-weight: 600;
+                color: var(--text-mid);
+                margin-bottom: .4rem;
+                text-transform: uppercase;
+                letter-spacing: .5px;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: .85rem 1rem;
+                border: 2px solid #ddd;
+                border-radius: var(--radius-sm);
+                font-size: 1rem;
+                font-family: inherit;
+                background: #fff;
+                transition: border-color .2s, box-shadow .2s;
+                outline: none;
+            }
+
+                .form-group input:focus {
+                    border-color: var(--green-mid);
+                    box-shadow: 0 0 0 3px rgba(45,106,79,.12);
+                }
+
+        .btn-login {
+            width: 100%;
+            padding: .95rem;
+            background: var(--green-deep);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .2s, transform .1s;
+            margin-top: .5rem;
+        }
+
+            .btn-login:hover {
+                background: var(--green-mid);
+            }
+
+            .btn-login:active {
+                transform: scale(.98);
+            }
+
+            .btn-login:disabled {
+                opacity: .6;
+                cursor: not-allowed;
+            }
+
+        .login-error {
+            background: #fdecea;
+            color: var(--red-soft);
+            padding: .75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: .9rem;
+            margin-bottom: 1rem;
+            display: none;
+            border-left: 3px solid var(--red-soft);
+        }
+
+        #dashboardSection {
+            display: none;
+            min-height: 100vh;
+            animation: fadeIn .4s ease;
+        }
+
+        .topbar {
+            background: var(--green-deep);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+        }
+
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+            .topbar-brand .icon {
+                width: 38px;
+                height: 38px;
+                background: var(--gold);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1rem;
+                color: var(--green-deep);
+            }
+
+            .topbar-brand span {
+                font-family: 'DM Serif Display', serif;
+                font-size: 1.3rem;
+                color: #fff;
+            }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .topbar-user .user-info {
+                text-align: right;
+                color: #fff;
+            }
+
+                .topbar-user .user-info .name {
+                    font-weight: 600;
+                    font-size: .95rem;
+                }
+
+                .topbar-user .user-info .role {
+                    font-size: .75rem;
+                    color: var(--green-pale);
+                    text-transform: uppercase;
+                    letter-spacing: .5px;
+                }
+
+        .btn-logout {
+            padding: .55rem 1.1rem;
+            background: rgba(255,255,255,.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: var(--radius-sm);
+            font-size: .85rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+            .btn-logout:hover {
+                background: rgba(255,255,255,.2);
+            }
+
+        .dashboard-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+
+            .dashboard-header h2 {
+                font-family: 'DM Serif Display', serif;
+                font-size: 1.8rem;
+                color: var(--green-deep);
+                margin-bottom: .3rem;
+            }
+
+            .dashboard-header p {
+                color: var(--text-light);
+                font-size: .95rem;
+            }
+
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-chip {
+            background: #fff;
+            border: 1px solid #e8e4da;
+            border-radius: 50px;
+            padding: .5rem 1.2rem;
+            font-size: .85rem;
+            font-weight: 500;
+            color: var(--text-mid);
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+            .stat-chip .dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+
+        .dot-active {
+            background: var(--green-light);
+        }
+
+        .dot-overdue {
+            background: var(--red-soft);
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .book-card {
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid #e8e4da;
+            padding: 1.5rem;
+            transition: box-shadow .25s, transform .25s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .book-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 4px;
+                height: 100%;
+                background: var(--green-mid);
+                border-radius: 4px 0 0 4px;
+            }
+
+            .book-card.vencido::before {
+                background: var(--red-soft);
+            }
+
+            .book-card:hover {
+                box-shadow: var(--shadow-md);
+                transform: translateY(-2px);
+            }
+
+            .book-card .book-title {
+                font-family: 'DM Serif Display', serif;
+                font-size: 1.15rem;
+                color: var(--green-deep);
+                margin-bottom: .3rem;
+                line-height: 1.3;
+            }
+
+            .book-card .book-author {
+                font-size: .88rem;
+                color: var(--text-light);
+                margin-bottom: 1rem;
+            }
+
+        .book-meta {
+            display: flex;
+            flex-direction: column;
+            gap: .4rem;
+            margin-bottom: 1.25rem;
+            flex-grow: 1;
+        }
+
+        .book-meta-item {
+            font-size: .82rem;
+            color: var(--text-mid);
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+            .book-meta-item .meta-icon {
+                width: 16px;
+                text-align: center;
+                flex-shrink: 0;
+            }
+
+        .badge {
+            display: inline-block;
+            padding: .25rem .7rem;
+            border-radius: 50px;
+            font-size: .75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+        }
+
+        .badge-activo {
+            background: rgba(45,106,79,.1);
+            color: var(--green-mid);
+        }
+
+        .badge-vencido {
+            background: rgba(192,57,43,.1);
+            color: var(--red-soft);
+        }
+
+        .book-actions {
+            display: flex;
+            gap: .6rem;
+        }
+
+        .btn-read {
+            flex: 1;
+            padding: .7rem 1rem;
+            background: var(--green-deep);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: .88rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .2s, transform .1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .4rem;
+        }
+
+            .btn-read:hover {
+                background: var(--green-mid);
+            }
+
+            .btn-read:active {
+                transform: scale(.97);
+            }
+
+        .btn-return {
+            padding: .7rem 1rem;
+            background: #fff;
+            color: var(--red-soft);
+            border: 2px solid var(--red-soft);
+            border-radius: var(--radius-sm);
+            font-size: .88rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+            .btn-return:hover {
+                background: var(--red-soft);
+                color: #fff;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            grid-column: 1 / -1;
+        }
+
+            .empty-state .empty-icon {
+                font-size: 3.5rem;
+                margin-bottom: 1rem;
+                opacity: .4;
+            }
+
+            .empty-state h3 {
+                font-family: 'DM Serif Display', serif;
+                font-size: 1.4rem;
+                color: var(--text-mid);
+                margin-bottom: .5rem;
+            }
+
+            .empty-state p {
+                color: var(--text-light);
+                font-size: .95rem;
+            }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2.5px solid rgba(255,255,255,.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .6s linear infinite;
+            display: inline-block;
+        }
+
+        .spinner-dark {
+            border-color: rgba(0,0,0,.1);
+            border-top-color: var(--green-mid);
+        }
+
+        .loading-overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            grid-column: 1 / -1;
+        }
+
+        #readerSection {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: #1a1a1a;
+            animation: fadeIn .3s ease;
+        }
+
+        .reader-topbar {
+            background: var(--green-deep);
+            padding: .75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+        }
+
+        .reader-topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-back {
+            padding: .5rem 1rem;
+            background: rgba(255,255,255,.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: var(--radius-sm);
+            font-size: .85rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .2s;
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,.2);
+            }
+
+        .reader-title {
+            color: #fff;
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.05rem;
+            max-width: 500px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .reader-warning {
+            color: var(--gold-light);
+            font-size: .78rem;
+            display: flex;
+            align-items: center;
+            gap: .3rem;
+        }
+
+        .reader-body {
+            height: calc(100vh - 52px);
+            position: relative;
+            background: #2a2a2a;
+        }
+
+            .reader-body iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+        .reader-loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #2a2a2a;
+            color: #fff;
+            z-index: 5;
+        }
+
+            .reader-loading .spinner-large {
+                width: 40px;
+                height: 40px;
+                border: 3px solid rgba(255,255,255,.15);
+                border-top-color: var(--gold);
+                border-radius: 50%;
+                animation: spin .7s linear infinite;
+                margin-bottom: 1rem;
+            }
+
+            .reader-loading p {
+                color: rgba(255,255,255,.6);
+                font-size: .9rem;
+            }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn .2s ease;
+        }
+
+            .modal-overlay.active {
+                display: flex;
+            }
+
+        .modal-box {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+            .modal-box .modal-icon {
+                font-size: 2.5rem;
+                margin-bottom: .75rem;
+            }
+
+            .modal-box h3 {
+                font-family: 'DM Serif Display', serif;
+                font-size: 1.3rem;
+                color: var(--green-deep);
+                margin-bottom: .4rem;
+            }
+
+            .modal-box p {
+                color: var(--text-mid);
+                font-size: .92rem;
+                margin-bottom: 1.5rem;
+                line-height: 1.5;
+            }
+
+        .modal-actions {
+            display: flex;
+            gap: .75rem;
+            justify-content: center;
+        }
+
+        .btn-modal-cancel {
+            padding: .65rem 1.5rem;
+            background: #f5f5f5;
+            color: var(--text-mid);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: .9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+            .btn-modal-cancel:hover {
+                background: #eee;
+            }
+
+        .btn-modal-confirm {
+            padding: .65rem 1.5rem;
+            background: var(--red-soft);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: .9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+            .btn-modal-confirm:hover {
+                background: var(--red-hover);
+            }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--green-deep);
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-size: .9rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            z-index: 3000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform .3s ease, opacity .3s ease;
+        }
+
+            .toast.show {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            .toast.error {
+                background: var(--red-soft);
+            }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @@keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .book-card {
+            animation: slideUp .4s ease backwards;
+        }
+
+            .book-card:nth-child(1) {
+                animation-delay: .05s;
+            }
+
+            .book-card:nth-child(2) {
+                animation-delay: .1s;
+            }
+
+            .book-card:nth-child(3) {
+                animation-delay: .15s;
+            }
+
+            .book-card:nth-child(4) {
+                animation-delay: .2s;
+            }
+
+        @@media (max-width: 768px) {
+            #loginSection {
+                flex-direction: column;
+            }
+
+            .login-left {
+                padding: 2rem;
+                min-height: auto;
+            }
+
+                .login-left h1 {
+                    font-size: 2rem;
+                }
+
+            .login-right {
+                padding: 2rem;
+            }
+
+            .topbar {
+                padding: .75rem 1rem;
+            }
+
+            .topbar-brand span {
+                display: none;
+            }
+
+            .dashboard-content {
+                padding: 1.5rem 1rem;
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reader-title {
+                max-width: 180px;
+                font-size: .9rem;
+            }
+
+            .reader-warning {
+                display: none;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .login-left {
+                display: none;
+            }
+
+            .book-actions {
+                flex-direction: column;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN -->
+    <section id="loginSection">
+        <div class="login-left">
+            <div class="brand">
+                <div class="brand-icon">📚</div>
+                <h1>BiblioTec</h1>
+                <p>Tu biblioteca digital</p>
+            </div>
+            <div class="login-decoration"></div>
+            <div class="login-decoration"></div>
+        </div>
+        <div class="login-right">
+            <div class="login-form-wrapper">
+                <h2>Iniciar Sesión</h2>
+                <p class="subtitle">Ingresa tus credenciales para acceder al lector</p>
+                <div class="login-error" id="loginError"></div>
+                <div class="form-group">
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" id="correo" placeholder="tu@correo.com" autocomplete="email" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+                </div>
+                <button class="btn-login" id="btnLogin" onclick="handleLogin()">Iniciar Sesión</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboardSection">
+        <div class="topbar">
+            <div class="topbar-brand">
+                <div class="icon">📚</div>
+                <span>BiblioTec</span>
+            </div>
+            <div class="topbar-user">
+                <div class="user-info">
+                    <div class="name" id="userName">—</div>
+                    <div class="role" id="userRole">—</div>
+                </div>
+                <button class="btn-logout" onclick="handleLogout()">Cerrar sesión</button>
+            </div>
+        </div>
+        <div class="dashboard-content">
+            <div class="dashboard-header">
+                <h2>Mis Préstamos</h2>
+                <p>Libros que actualmente tienes en préstamo</p>
+            </div>
+            <div class="stats-bar" id="statsBar"></div>
+            <div class="books-grid" id="booksGrid">
+                <div class="loading-overlay"><div class="spinner spinner-dark" style="width:32px;height:32px;"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PDF READER -->
+    <section id="readerSection">
+        <div class="reader-topbar">
+            <div class="reader-topbar-left">
+                <button class="btn-back" onclick="closeReader()">← Volver</button>
+                <span class="reader-title" id="readerTitle">—</span>
+            </div>
+            <div class="reader-warning">🔒 Modo lectura — descarga no disponible</div>
+        </div>
+        <div class="reader-body">
+            <div class="reader-loading" id="readerLoading">
+                <div class="spinner-large"></div>
+                <p>Cargando documento…</p>
+            </div>
+            <iframe id="pdfFrame" sandbox="allow-scripts allow-same-origin allow-popups" onload="onPdfLoaded()"></iframe>
+        </div>
+    </section>
+
+    <!-- MODAL DEVOLVER -->
+    <div class="modal-overlay" id="returnModal">
+        <div class="modal-box">
+            <div class="modal-icon">📖</div>
+            <h3>¿Devolver este libro?</h3>
+            <p id="returnModalText"></p>
+            <div class="modal-actions">
+                <button class="btn-modal-cancel" onclick="closeReturnModal()">Cancelar</button>
+                <button class="btn-modal-confirm" id="btnConfirmReturn" onclick="confirmReturn()">Sí, devolver</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let authToken = null;
+        let currentUser = null;
+        let prestamos = [];
+        let returnTargetId = null;
+        const API_BASE = '/api';
+
+        // ===== NORMALIZE: acepta CUALQUIER casing (PascalCase o camelCase) =====
+        function normalizePrestamo(p) {
+            return {
+                idPrestamo:       p.idPrestamo       ?? p.IdPrestamo       ?? p.prestamoId ?? p.PrestamoId ?? 0,
+                idLibro:          p.idLibro           ?? p.IdLibro          ?? p.libroId    ?? p.LibroId    ?? 0,
+                tituloLibro:      p.tituloLibro       ?? p.TituloLibro      ?? 'Sin título',
+                autorLibro:       p.autorLibro        ?? p.AutorLibro       ?? '',
+                rutaPdf:          p.rutaPdf           ?? p.RutaPdf          ?? '',
+                fechaPrestamo:    p.fechaPrestamo     ?? p.FechaPrestamo    ?? '',
+                fechaVencimiento: p.fechaVencimiento  ?? p.FechaVencimiento ?? '',
+                fechaDevolucion:  p.fechaDevolucion   ?? p.FechaDevolucion  ?? null,
+                estado:          (p.estado            ?? p.Estado           ?? '').toUpperCase()
+            };
+        }
+
+        // ===== AUTH =====
+        async function handleLogin() {
+            const correo = document.getElementById('correo').value.trim();
+            const pass = document.getElementById('password').value;
+            const btn = document.getElementById('btnLogin');
+            const errorDiv = document.getElementById('loginError');
+            if (!correo || !pass) { showLoginError('Completa todos los campos.'); return; }
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>';
+            errorDiv.style.display = 'none';
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ correo, password: pass })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || 'Credenciales incorrectas.');
+                authToken = data.data.token ?? data.data.Token;
+                currentUser = {
+                    nombre: data.data.nombre ?? data.data.Nombre,
+                    correo: data.data.correo ?? data.data.Correo,
+                    rol:    data.data.rol    ?? data.data.Rol
+                };
+                showDashboard();
+            } catch (err) { showLoginError(err.message); }
+            finally { btn.disabled = false; btn.textContent = 'Iniciar Sesión'; }
+        }
+
+        document.getElementById('password').addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+        document.getElementById('correo').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('password').focus(); });
+
+        function showLoginError(msg) { const el = document.getElementById('loginError'); el.textContent = msg; el.style.display = 'block'; }
+
+        function handleLogout() {
+            authToken = null; currentUser = null; prestamos = [];
+            document.getElementById('correo').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'none';
+            document.getElementById('readerSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'flex';
+        }
+
+        // ===== DASHBOARD =====
+        async function showDashboard() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('dashboardSection').style.display = 'block';
+            document.getElementById('userName').textContent = currentUser.nombre;
+            document.getElementById('userRole').textContent = currentUser.rol;
+            await loadPrestamos();
+        }
+
+        async function loadPrestamos() {
+            const grid = document.getElementById('booksGrid');
+            grid.innerHTML = '<div class="loading-overlay"><div class="spinner spinner-dark" style="width:32px;height:32px;"></div></div>';
+            try {
+                const res = await fetch(`${API_BASE}/prestamos/mis-prestamos`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const data = await res.json();
+
+                // ★ DEBUG — abre F12 > Console para ver qué devuelve la API
+                console.log('=== RAW API /mis-prestamos ===', JSON.stringify(data, null, 2));
+
+                if (!res.ok) throw new Error(data.message ?? data.Message ?? 'Error al cargar préstamos.');
+
+                const rawList = data.data ?? data.Data ?? data.$values ?? [];
+                prestamos = rawList.map(normalizePrestamo);
+
+                console.log('=== NORMALIZADOS ===', JSON.stringify(prestamos, null, 2));
+
+                renderPrestamos();
+            } catch (err) {
+                console.error('Error loadPrestamos:', err);
+                grid.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Error al cargar</h3><p>${err.message}</p></div>`;
+            }
+        }
+
+        function renderPrestamos() {
+            const grid = document.getElementById('booksGrid');
+            const statsBar = document.getElementById('statsBar');
+            const activos = prestamos.filter(p => p.estado === 'ACTIVO' || p.estado === 'VENCIDO');
+            const vencidos = prestamos.filter(p => p.estado === 'VENCIDO');
+
+            statsBar.innerHTML = `
+                <div class="stat-chip"><span class="dot dot-active"></span>${activos.length} préstamo${activos.length !== 1 ? 's' : ''} activo${activos.length !== 1 ? 's' : ''}</div>
+                ${vencidos.length > 0 ? `<div class="stat-chip"><span class="dot dot-overdue"></span>${vencidos.length} vencido${vencidos.length !== 1 ? 's' : ''}</div>` : ''}`;
+
+            if (activos.length === 0) {
+                grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📚</div><h3>Sin préstamos activos</h3><p>Actualmente no tienes libros en préstamo. Solicita uno para comenzar a leer.</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = activos.map(p => {
+                const isVencido = p.estado === 'VENCIDO';
+                const fechaVenc = new Date(p.fechaVencimiento);
+                const diasRestantes = Math.ceil((fechaVenc - new Date()) / (1000 * 60 * 60 * 24));
+                let estadoTexto = isVencido ? 'Vencido' : diasRestantes <= 2 ? `Vence en ${diasRestantes} día${diasRestantes !== 1 ? 's' : ''}` : `${diasRestantes} días restantes`;
+                const tituloSafe = escapeHtml(p.tituloLibro);
+
+                return `
+                <div class="book-card ${isVencido ? 'vencido' : ''}">
+                    <div class="book-title">${tituloSafe}</div>
+                    <div class="book-author">${escapeHtml(p.autorLibro || 'Autor desconocido')}</div>
+                    <div class="book-meta">
+                        <div class="book-meta-item"><span class="meta-icon">📅</span>Prestado: ${formatDate(p.fechaPrestamo)}</div>
+                        <div class="book-meta-item"><span class="meta-icon">⏰</span>Vence: ${formatDate(p.fechaVencimiento)}</div>
+                        <div class="book-meta-item"><span class="meta-icon">${isVencido ? '🔴' : '🟢'}</span><span class="badge ${isVencido ? 'badge-vencido' : 'badge-activo'}">${estadoTexto}</span></div>
+                    </div>
+                    <div class="book-actions">
+                        <button class="btn-read" onclick="openReader(${p.idPrestamo})">📖 Leer</button>
+                        <button class="btn-return" onclick="openReturnModal(${p.idPrestamo}, '${tituloSafe.replace(/'/g, "\\'")}')">Devolver</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ===== PDF READER =====
+        function openReader(idPrestamo) {
+            const prestamo = prestamos.find(p => p.idPrestamo === idPrestamo);
+            if (!prestamo || !prestamo.rutaPdf) { showToast('No se encontró el enlace del documento.', true); return; }
+            document.getElementById('readerTitle').textContent = prestamo.tituloLibro;
+            document.getElementById('readerLoading').style.display = 'flex';
+            let pdfUrl = prestamo.rutaPdf;
+            if (pdfUrl.includes('sharepoint.com') && !pdfUrl.includes('action=embedview') && !pdfUrl.includes('embed=1')) {
+                pdfUrl += (pdfUrl.includes('?') ? '&' : '?') + 'action=embedview';
+            }
+            document.getElementById('pdfFrame').src = pdfUrl;
+            document.getElementById('readerSection').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function onPdfLoaded() { document.getElementById('readerLoading').style.display = 'none'; }
+
+        function closeReader() {
+            document.getElementById('pdfFrame').src = 'about:blank';
+            document.getElementById('readerSection').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('readerSection').addEventListener('contextmenu', e => e.preventDefault());
+
+        // ===== DEVOLVER =====
+        function openReturnModal(idPrestamo, titulo) {
+            returnTargetId = idPrestamo;
+            document.getElementById('returnModalText').textContent = `¿Estás seguro de que deseas devolver "${titulo}"? Ya no podrás acceder a su lectura.`;
+            document.getElementById('returnModal').classList.add('active');
+        }
+
+        function closeReturnModal() { returnTargetId = null; document.getElementById('returnModal').classList.remove('active'); }
+
+        async function confirmReturn() {
+            if (!returnTargetId) return;
+            const btn = document.getElementById('btnConfirmReturn');
+            btn.disabled = true; btn.textContent = 'Devolviendo…';
+            try {
+                const res = await fetch(`${API_BASE}/prestamos/${returnTargetId}/devolver`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${authToken}` } });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message ?? data.Message ?? 'Error al devolver.');
+                showToast('Libro devuelto correctamente.');
+                closeReturnModal();
+                await loadPrestamos();
+            } catch (err) { showToast(err.message, true); }
+            finally { btn.disabled = false; btn.textContent = 'Sí, devolver'; }
+        }
+
+        document.getElementById('returnModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeReturnModal(); });
+
+        // ===== TOAST =====
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = 'toast' + (isError ? ' error' : '');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        // ===== UTILS =====
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            const d = new Date(dateStr);
+            return isNaN(d.getTime()) ? '—' : d.toLocaleDateString('es-SV', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        function escapeHtml(str) { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('readerSection').style.display === 'block') closeReader();
+                if (document.getElementById('returnModal').classList.contains('active')) closeReturnModal();
+            }
+        });
+    </script>
+</body>
+</html>
