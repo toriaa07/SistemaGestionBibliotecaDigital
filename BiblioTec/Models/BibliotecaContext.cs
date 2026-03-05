@@ -57,6 +57,15 @@ namespace BiblioTec.Models
                 .HasForeignKey(n => n.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Configuracion>(entity =>
+            {
+                entity.ToTable(tb =>
+                {
+                    tb.HasTrigger("TR_Config_ActualizarVencimientos");
+                    tb.UseSqlOutputClause(false);
+                });
+            });
+
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -1,6 +1,6 @@
 ﻿@using BiblioTec.DTOs
 @using BiblioTec.DTOs.Prestamos
-@model IEnumerable<PrestamoResumenDto>
+@model IEnumerable<BiblioTec.DTOs.Prestamos.PrestamoResumenDto>
 @{
     Layout = null;
     var userName = ViewBag.UserName as string ?? "—";
@@ -720,7 +720,12 @@
             <div class="reader-warning">🔒 Modo lectura — descarga no disponible</div>
         </div>
         <div class="reader-body">
-            <iframe id="pdfFrame" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+            @foreach (var prestamo in Model)
+            {
+                <div class="reader-body">
+                    <iframe src="@prestamo.RutaPdf" width="100%" height="800"></iframe>
+                </div>
+            }
         </div>
     </section>
 

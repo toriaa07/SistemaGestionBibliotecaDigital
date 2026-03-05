@@ -108,16 +108,16 @@ INSERT INTO Configuraciones (ConfigId, DiasPrestamo, MaxPrestamosActivos, Notifi
 
 INSERT INTO Libros (Titulo, Autor, Editorial, Anio, RutaPdf, TotalEjemplares, Activo)
 VALUES 
-('GcMODU300 - 3.1 Guía 1 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'http://localhost:5165/pdfs/GcMODU300_3.1_Guia1_2026.pdf', 10, 1),
-('GcMODU300 - 3.1 Guía 2 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'http://localhost:5165/pdfs/GcMODU300_3.1_Guia2_2026.pdf', 10, 1),
-('GcMODU300 - 3.1 Guía 3 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'http://localhost:5165/pdfs/GcMODU300_3.1_Guia3_2026.pdf', 10, 1),
-('GcMODU300 - 3.1 Guía 4 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'http://localhost:5165/pdfs/GcMODU300_3.1_Guia4_2026.pdf', 10, 1),
-('GcMODU300 - 3.1 Guía 5 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'http://localhost:5165/pdfs/GcMODU300_3.1_Guia5_2026.pdf', 10, 1),
-('GcMODU300 - 3.1 Guía 6 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'http://localhost:5165/pdfs/GcMODU300_3.1_Guia6_2026.pdf', 10, 1),
-('GcMODU300 - 3.1 Guía 7 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'http://localhost:5165/pdfs/GcMODU300_3.1_Guia7_2026.pdf', 10, 1),
-('GcMODU300 - 3.1 Guía 8 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'http://localhost:5165/pdfs/GcMODU300_3.1_Guia8_2026.pdf', 10, 1),
-('GcMODU300 - 3.1 Guía 9 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, 'http://localhost:5165/pdfs/GcMODU300_3.1_Guia9_2026.pdf', 10, 1),
-('GcMODU300 - 3.1 Guía 10 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026,'http://localhost:5165/pdfs/GcMODU300_3.1_Guia10_2026.pdf', 10, 1);
+('GcMODU300 - 3.1 Guía 1 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, '/pdfs/GcMODU300_3.1_Guia1_2026.pdf', 10, 1),
+('GcMODU300 - 3.1 Guía 2 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, '/pdfs/GcMODU300_3.1_Guia2_2026.pdf', 10, 1),
+('GcMODU300 - 3.1 Guía 3 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, '/pdfs/GcMODU300_3.1_Guia3_2026.pdf', 10, 1),
+('GcMODU300 - 3.1 Guía 4 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, '/pdfs/GcMODU300_3.1_Guia4_2026.pdf', 10, 1),
+('GcMODU300 - 3.1 Guía 5 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, '/pdfs/GcMODU300_3.1_Guia5_2026.pdf', 10, 1),
+('GcMODU300 - 3.1 Guía 6 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, '/pdfs/GcMODU300_3.1_Guia6_2026.pdf', 10, 1),
+('GcMODU300 - 3.1 Guía 7 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, '/pdfs/GcMODU300_3.1_Guia7_2026.pdf', 10, 1),
+('GcMODU300 - 3.1 Guía 8 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, '/pdfs/GcMODU300_3.1_Guia8_2026.pdf', 10, 1),
+('GcMODU300 - 3.1 Guía 9 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026, '/pdfs/GcMODU300_3.1_Guia9_2026.pdf', 10, 1),
+('GcMODU300 - 3.1 Guía 10 - 2026', 'Daniel Sosa', 'Colegio Padre Arrupe', 2026,'/pdfs/GcMODU300_3.1_Guia10_2026.pdf', 10, 1);
 
 INSERT INTO Categorias (Nombre)
 VALUES

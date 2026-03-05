@@ -24,6 +24,16 @@ namespace BiblioTec.Controllers
 
             var prestamos = await _prestamoService.GetByUsuarioAsync(userId.Value);
 
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+
+            foreach (var p in prestamos)
+            {
+                if (!string.IsNullOrEmpty(p.RutaPdf))
+                {
+                    p.RutaPdf = baseUrl + p.RutaPdf;
+                }
+            }
+
             return View(prestamos);
         }
 
