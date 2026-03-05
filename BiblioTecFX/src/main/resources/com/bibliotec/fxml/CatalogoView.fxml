@@ -35,8 +35,10 @@
 
     <!-- Table -->
     <VBox VBox.vgrow="ALWAYS" style="-fx-padding: 16 24 24 24;">
-        <TableView fx:id="librosTable" VBox.vgrow="ALWAYS"
-                   styleClass="data-table" placeholder="&lt;Label text='No hay libros para mostrar'/&gt;">
+        <TableView fx:id="librosTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <placeholder>
+                <Label text="No hay libros para mostrar"/>
+            </placeholder>
 
             <columns>
                 <TableColumn fx:id="colTitulo" text="Título" prefWidth="280"/>
