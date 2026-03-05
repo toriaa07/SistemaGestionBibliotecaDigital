@@ -2,12 +2,12 @@ namespace BiblioTec.DTOs.Prestamos
 {
     public class PrestamoDto
     {
-        public int IdPrestamo { get; set; }
+        public int PrestamoId { get; set; }
 
-        public int IdUsuario { get; set; }
+        public int UsuarioId { get; set; }
         public string NombreUsuario { get; set; }
 
-        public int IdLibro { get; set; }
+        public int LibroId { get; set; }
         public string TituloLibro { get; set; }
         public string AutorLibro { get; set; }
 
@@ -26,8 +26,8 @@ namespace BiblioTec.DTOs.Prestamos
 
     public class PrestamoResumenDto
     {
-        public int IdPrestamo { get; set; }
-        public int IdLibro { get; set; }
+        public int PrestamoId { get; set; }
+        public int LibroId { get; set; }
         public string TituloLibro { get; set; }
         public string AutorLibro { get; set; }
         public string RutaPdf { get; set; }

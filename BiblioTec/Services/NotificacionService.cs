@@ -52,7 +52,7 @@ namespace BiblioTec.Services.Implementations
         public async Task<NotificacionDto> CreateAsync(NotificacionCreateDto dto)
         {
             // Verificar que el usuario destino existe
-            var usuarioExiste = await _context.Usuarios.AnyAsync(u => u.UsuarioId == dto.IdUsuario);
+            var usuarioExiste = await _context.Usuarios.AnyAsync(u => u.UsuarioId == dto.UsuarioId);
             if (!usuarioExiste)
                 throw new KeyNotFoundException("Usuario destino no encontrado.");
 

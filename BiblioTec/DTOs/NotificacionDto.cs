@@ -2,7 +2,7 @@ namespace BiblioTec.DTOs.Notificaciones
 {
     public class NotificacionDto
     {
-        public int IdNotificacion { get; set; }
+        public int NotificacionId { get; set; }
 
         public string Tipo { get; set; }
         public string Mensaje { get; set; }
@@ -12,7 +12,7 @@ namespace BiblioTec.DTOs.Notificaciones
 
     public class NotificacionCreateDto
     {
-        public int IdUsuario { get; set; }
+        public int UsuarioId { get; set; }
         public string Tipo { get; set; }
         public string Mensaje { get; set; }
     }

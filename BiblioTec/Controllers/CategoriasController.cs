@@ -32,7 +32,7 @@ namespace BiblioTec.Controllers
             try
             {
                 var categorias = await _categoriaService.GetAllAsync();
-                var categoria = categorias.FirstOrDefault(c => c.IdCategoria == id);
+                var categoria = categorias.FirstOrDefault(c => c.CategoriaId == id);
 
                 if (categoria == null)
                     return NotFound(new { success = false, message = "Categoría no encontrada." });

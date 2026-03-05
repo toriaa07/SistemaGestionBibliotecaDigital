@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bibliotec.controller.PrestamosController"
+      styleClass="view-container" spacing="0">
+
+    <!-- Header -->
+    <VBox styleClass="view-header">
+        <padding><Insets top="24" right="28" bottom="20" left="28"/></padding>
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="🔖" style="-fx-font-size:24px;"/>
+            <VBox spacing="2">
+                <Label text="Mis Préstamos" styleClass="view-title"/>
+                <Label text="Historial y préstamos activos" styleClass="view-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="↻  Actualizar" styleClass="btn-secondary"
+                    onAction="#handleRefresh" prefHeight="36"/>
+        </HBox>
+
+        <!-- Filter tabs -->
+        <HBox spacing="8" style="-fx-padding: 14 0 0 0;">
+            <ToggleButton fx:id="btnTodos" text="Todos" styleClass="filter-tab"
+                          selected="true" onAction="#handleFilter" prefHeight="32"/>
+            <ToggleButton fx:id="btnActivos" text="Activos" styleClass="filter-tab"
+                          onAction="#handleFilter" prefHeight="32"/>
+            <ToggleButton fx:id="btnVencidos" text="Vencidos" styleClass="filter-tab"
+                          onAction="#handleFilter" prefHeight="32"/>
+            <ToggleButton fx:id="btnDevueltos" text="Devueltos" styleClass="filter-tab"
+                          onAction="#handleFilter" prefHeight="32"/>
+        </HBox>
+    </VBox>
+
+    <!-- Table -->
+    <VBox VBox.vgrow="ALWAYS" style="-fx-padding: 16 24 24 24;">
+        <TableView fx:id="prestamosTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="colTitulo" text="Libro" prefWidth="260"/>
+                <TableColumn fx:id="colAutor" text="Autor" prefWidth="160"/>
+                <TableColumn fx:id="colFechaPrestamo" text="Fecha Préstamo" prefWidth="140"/>
+                <TableColumn fx:id="colFechaVence" text="Vencimiento" prefWidth="140"/>
+                <TableColumn fx:id="colFechaDevolucion" text="Devolución" prefWidth="130"/>
+                <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+                <TableColumn fx:id="colAccion" text="Acción" prefWidth="110"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

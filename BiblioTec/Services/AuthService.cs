@@ -40,7 +40,7 @@ namespace BiblioTec.Services.Implementations
 
             return new LoginResponseDto
             {
-                IdUsuario = usuario.UsuarioId,
+                UsuarioId = usuario.UsuarioId,
                 Token = GenerarToken(usuario),
                 Nombre = usuario.Nombre,
                 Correo = usuario.Correo,

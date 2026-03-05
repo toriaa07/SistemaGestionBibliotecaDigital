@@ -49,7 +49,7 @@ namespace BiblioTec.Controllers
             {
                 var idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
                 var notificaciones = await _notificacionService.GetByUsuarioAsync(idUsuario);
-                var notificacion = notificaciones.FirstOrDefault(n => n.IdNotificacion == id);
+                var notificacion = notificaciones.FirstOrDefault(n => n.NotificacionId == id);
                 
                 if (notificacion == null)
                     return NotFound(new { success = false, message = "Notificación no encontrada." });

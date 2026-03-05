@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.bibliotec.controller.MainController"
+            styleClass="main-root"
+            prefWidth="1100" prefHeight="700">
+
+    <!-- ── Sidebar ── -->
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220" spacing="4">
+            <padding><Insets top="0" right="0" bottom="16" left="0"/></padding>
+
+            <!-- Header brand -->
+            <VBox styleClass="sidebar-header" alignment="CENTER" spacing="4">
+                <padding><Insets top="24" right="16" bottom="24" left="16"/></padding>
+                <Label text="📚" style="-fx-font-size:32px;"/>
+                <Label text="BiblioTec" styleClass="sidebar-brand"/>
+                <Label fx:id="userNameLabel" styleClass="sidebar-username"/>
+            </VBox>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <!-- Navigation buttons -->
+            <VBox spacing="4" style="-fx-padding: 12 8 0 8;" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnCatalogo" text="📖  Catálogo de Libros"
+                        styleClass="nav-btn, nav-btn-active"
+                        prefWidth="200" onAction="#showCatalogo"/>
+                <Button fx:id="btnPrestamos" text="🔖  Mis Préstamos"
+                        styleClass="nav-btn"
+                        prefWidth="200" onAction="#showPrestamos"/>
+                <Button fx:id="btnNotificaciones" text="🔔  Notificaciones"
+                        styleClass="nav-btn"
+                        prefWidth="200" onAction="#showNotificaciones"/>
+                <Button fx:id="btnPerfil" text="👤  Mi Perfil"
+                        styleClass="nav-btn"
+                        prefWidth="200" onAction="#showPerfil"/>
+            </VBox>
+
+            <!-- Spacer -->
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Logout -->
+            <VBox style="-fx-padding: 0 8 0 8;">
+                <Button text="⬅  Cerrar Sesión" styleClass="nav-btn, nav-btn-logout"
+                        prefWidth="200" onAction="#handleLogout"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- ── Content area ── -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area"/>
+    </center>
+
+</BorderPane>

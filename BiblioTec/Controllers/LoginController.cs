@@ -33,7 +33,7 @@ namespace BiblioTec.Controllers
                 var response = await _authService.LoginAsync(dto);
 
                 // Guardar datos en sesión
-                HttpContext.Session.SetInt32("UserId", response.IdUsuario);
+                HttpContext.Session.SetInt32("UserId", response.UsuarioId);
                 HttpContext.Session.SetString("UserName", response.Nombre);
                 HttpContext.Session.SetString("UserRole", response.Rol);
 

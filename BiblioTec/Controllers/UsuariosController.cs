@@ -45,7 +45,7 @@ namespace BiblioTec.Controllers
             try
             {
                 var usuario = await _usuarioService.CreateAsync(dto);
-                return CreatedAtAction(nameof(GetById), new { id = usuario.IdUsuario },
+                return CreatedAtAction(nameof(GetById), new { id = usuario.UsuarioId },
                     new { success = true, data = usuario });
             }
             catch (InvalidOperationException ex)

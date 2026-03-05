@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bibliotec.controller.PerfilController"
+      styleClass="view-container" spacing="0">
+
+    <VBox styleClass="view-header">
+        <padding><Insets top="24" right="28" bottom="20" left="28"/></padding>
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="👤" style="-fx-font-size:24px;"/>
+            <VBox spacing="2">
+                <Label text="Mi Perfil" styleClass="view-title"/>
+                <Label text="Información de cuenta y seguridad" styleClass="view-subtitle"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-clean">
+        <VBox spacing="24" style="-fx-padding: 24 28 28 28;">
+
+            <!-- Info Card -->
+            <VBox styleClass="card" spacing="16">
+                <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+                <Label text="Información de Cuenta" styleClass="card-title"/>
+
+                <HBox spacing="32">
+                    <!-- Avatar -->
+                    <VBox alignment="CENTER" spacing="8">
+                        <Label fx:id="avatarLabel" text="👤"
+                               style="-fx-font-size:56px; -fx-background-color:#e8eaf6;
+                                      -fx-background-radius:50%; -fx-padding: 16;"/>
+                        <Label fx:id="rolBadge" text="USUARIO" styleClass="role-badge"/>
+                    </VBox>
+
+                    <!-- Fields -->
+                    <VBox spacing="14" HBox.hgrow="ALWAYS">
+                        <HBox spacing="12">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Nombre completo" styleClass="field-label"/>
+                                <Label fx:id="nombreLabel" styleClass="field-value"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Correo electrónico" styleClass="field-label"/>
+                                <Label fx:id="correoLabel" styleClass="field-value"/>
+                            </VBox>
+                        </HBox>
+                        <HBox spacing="12">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Rol en el sistema" styleClass="field-label"/>
+                                <Label fx:id="rolLabel" styleClass="field-value"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Estado" styleClass="field-label"/>
+                                <Label text="ACTIVO" styleClass="field-value"
+                                       style="-fx-text-fill: #27ae60; -fx-font-weight:bold;"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Change Password Card -->
+            <VBox styleClass="card" spacing="16">
+                <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+                <Label text="Cambiar Contraseña" styleClass="card-title"/>
+                <Label text="Por seguridad, usa una contraseña de al menos 8 caracteres."
+                       styleClass="card-hint"/>
+
+                <VBox spacing="14" maxWidth="420">
+                    <VBox spacing="5">
+                        <Label text="Contraseña actual" styleClass="field-label"/>
+                        <PasswordField fx:id="passActualField" styleClass="text-field-custom"
+                                       promptText="Ingresa tu contraseña actual"/>
+                    </VBox>
+                    <VBox spacing="5">
+                        <Label text="Nueva contraseña" styleClass="field-label"/>
+                        <PasswordField fx:id="passNuevaField" styleClass="text-field-custom"
+                                       promptText="Mínimo 8 caracteres"/>
+                    </VBox>
+                    <VBox spacing="5">
+                        <Label text="Confirmar nueva contraseña" styleClass="field-label"/>
+                        <PasswordField fx:id="passConfirmField" styleClass="text-field-custom"
+                                       promptText="Repite la nueva contraseña"/>
+                    </VBox>
+
+                    <Label fx:id="passErrorLabel" styleClass="error-label"
+                           visible="false" managed="false" wrapText="true"/>
+
+                    <Button text="Actualizar Contraseña" styleClass="btn-primary"
+                            prefWidth="220" prefHeight="40"
+                            onAction="#handleChangePassword">
+                        <VBox.margin><Insets top="6"/></VBox.margin>
+                    </Button>
+                </VBox>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+</VBox>

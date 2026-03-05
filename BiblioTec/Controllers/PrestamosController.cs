@@ -27,13 +27,13 @@ namespace BiblioTec.Controllers
 
             // Aplicar filtros
             if (idUsuario.HasValue)
-                prestamos = prestamos.Where(p => p.IdUsuario == idUsuario.Value).ToList();
+                prestamos = prestamos.Where(p => p.UsuarioId == idUsuario.Value).ToList();
 
             if (!string.IsNullOrEmpty(estado))
                 prestamos = prestamos.Where(p => p.Estado.Equals(estado, StringComparison.OrdinalIgnoreCase)).ToList();
 
             if (idLibro.HasValue)
-                prestamos = prestamos.Where(p => p.IdLibro == idLibro.Value).ToList();
+                prestamos = prestamos.Where(p => p.LibroId == idLibro.Value).ToList();
 
             if (activos.HasValue)
                 prestamos = activos.Value ? 
@@ -84,7 +84,7 @@ namespace BiblioTec.Controllers
             {
                 var idUsuario = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
                 var prestamo = await _prestamoService.CrearAsync(dto, idUsuario);
-                return CreatedAtAction(nameof(GetById), new { id = prestamo.IdPrestamo },
+                return CreatedAtAction(nameof(GetById), new { id = prestamo.PrestamoId },
                     new { success = true, data = prestamo });
             }
             catch (KeyNotFoundException ex)

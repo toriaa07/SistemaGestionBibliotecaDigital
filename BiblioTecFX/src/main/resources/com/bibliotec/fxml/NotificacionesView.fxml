@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bibliotec.controller.NotificacionesController"
+      styleClass="view-container" spacing="0">
+
+    <VBox styleClass="view-header">
+        <padding><Insets top="24" right="28" bottom="20" left="28"/></padding>
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="🔔" style="-fx-font-size:24px;"/>
+            <VBox spacing="2">
+                <Label text="Notificaciones" styleClass="view-title"/>
+                <Label fx:id="subtitleLabel" text="Tus avisos y recordatorios" styleClass="view-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="✔  Marcar todas leídas" styleClass="btn-secondary"
+                    onAction="#handleMarcarTodas" prefHeight="36"/>
+            <Button text="↻  Actualizar" styleClass="btn-ghost"
+                    onAction="#handleRefresh" prefHeight="36"/>
+        </HBox>
+    </VBox>
+
+    <VBox VBox.vgrow="ALWAYS" style="-fx-padding: 16 24 24 24;">
+        <TableView fx:id="notifTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+            <columns>
+                <TableColumn fx:id="colEstado" text="" prefWidth="30"/>
+                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="130"/>
+                <TableColumn fx:id="colMensaje" text="Mensaje" prefWidth="420"/>
+                <TableColumn fx:id="colFecha" text="Fecha" prefWidth="150"/>
+                <TableColumn fx:id="colLeida" text="Estado" prefWidth="90"/>
+                <TableColumn fx:id="colAccion" text="Acción" prefWidth="110"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

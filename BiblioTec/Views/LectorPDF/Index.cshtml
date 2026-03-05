@@ -702,7 +702,7 @@
                             {
                                 <button class="btn-read" onclick="openReader('@Html.Raw(p.RutaPdf.Replace("'", "\\'"))', '@Html.Raw(p.TituloLibro.Replace("'", "\\'"))')">📖 Leer</button>
                             }
-                            <button class="btn-devolver" onclick="openReturnModal(@p.IdPrestamo, '@Html.Raw(p.TituloLibro.Replace("'", "\\'"))')">Devolver</button>
+                            <button class="btn-devolver" onclick="openReturnModal(@p.PrestamoId, '@Html.Raw(p.TituloLibro.Replace("'", "\\'"))')">Devolver</button>
                         </div>
                     </div>
                 }

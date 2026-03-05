@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.bibliotec.controller.CatalogoController"
+      styleClass="view-container" spacing="0">
+
+    <!-- Header -->
+    <VBox styleClass="view-header">
+        <padding><Insets top="24" right="28" bottom="20" left="28"/></padding>
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label text="📖" style="-fx-font-size:24px;"/>
+            <VBox spacing="2">
+                <Label text="Catálogo de Libros" styleClass="view-title"/>
+                <Label text="Explora y solicita préstamos del catálogo disponible"
+                       styleClass="view-subtitle"/>
+            </VBox>
+        </HBox>
+
+        <!-- Search bar -->
+        <HBox spacing="10" style="-fx-padding: 16 0 0 0;" alignment="CENTER_LEFT">
+            <TextField fx:id="searchField" styleClass="search-field"
+                       promptText="🔍  Buscar por título o autor…"
+                       prefWidth="380" prefHeight="38"/>
+            <Button text="Buscar" styleClass="btn-secondary"
+                    onAction="#handleSearch" prefHeight="38"/>
+            <Button text="Ver todos" styleClass="btn-ghost"
+                    onAction="#handleShowAll" prefHeight="38"/>
+            <Label fx:id="countLabel" styleClass="count-label"/>
+        </HBox>
+    </VBox>
+
+    <!-- Table -->
+    <VBox VBox.vgrow="ALWAYS" style="-fx-padding: 16 24 24 24;">
+        <TableView fx:id="librosTable" VBox.vgrow="ALWAYS"
+                   styleClass="data-table" placeholder="&lt;Label text='No hay libros para mostrar'/&gt;">
+
+            <columns>
+                <TableColumn fx:id="colTitulo" text="Título" prefWidth="280"/>
+                <TableColumn fx:id="colAutor" text="Autor" prefWidth="180"/>
+                <TableColumn fx:id="colEditorial" text="Editorial" prefWidth="150"/>
+                <TableColumn fx:id="colAnio" text="Año" prefWidth="60"/>
+                <TableColumn fx:id="colCategorias" text="Categorías" prefWidth="150"/>
+                <TableColumn fx:id="colDisponibles" text="Disponibilidad" prefWidth="120"/>
+                <TableColumn fx:id="colAccion" text="Acción" prefWidth="110"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

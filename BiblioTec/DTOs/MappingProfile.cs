@@ -51,7 +51,7 @@ namespace BiblioTec.Mappings
                 .ForMember(dest => dest.TituloLibro, opt => opt.MapFrom(src => src.Libro.Titulo))
                 .ForMember(dest => dest.AutorLibro,  opt => opt.MapFrom(src => src.Libro.Autor))
                 .ForMember(dest => dest.RutaPdf,     opt => opt.MapFrom(src => src.Libro.RutaPdf))
-                .ForMember(dest => dest.IdLibro,     opt => opt.MapFrom(src => src.LibroId));
+                .ForMember(dest => dest.LibroId,     opt => opt.MapFrom(src => src.LibroId));
 
             CreateMap<Notificacion, NotificacionDto>();
 
