@@ -115,7 +115,7 @@ public class ApiService {
 
     public PrestamoDto crearPrestamo(int idLibro) throws IOException {
         String body = mapper.writeValueAsString(
-                mapper.createObjectNode().put("idLibro", idLibro)
+                mapper.createObjectNode().put("libroId", idLibro)
         );
         Request req = authBuilder(BASE_URL + "/prestamos")
                 .post(RequestBody.create(body, JSON))

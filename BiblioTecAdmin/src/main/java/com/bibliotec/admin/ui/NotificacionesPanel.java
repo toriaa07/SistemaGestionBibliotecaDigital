@@ -23,7 +23,7 @@ public class NotificacionesPanel extends JPanel {
     }
 
     private void buildUI() {
-        JPanel header = UIUtils.headerPanel("🔔  Enviar Notificaciones",
+        JPanel header = UIUtils.headerPanel("Enviar Notificaciones",
                 "Envía notificaciones a los usuarios del sistema");
 
         JPanel center = new JPanel(new GridBagLayout());
@@ -38,7 +38,7 @@ public class NotificacionesPanel extends JPanel {
                 BorderFactory.createLineBorder(new Color(224,224,224),1,true),
                 BorderFactory.createEmptyBorder(28,30,28,30)));
 
-        JLabel cardTitle = new JLabel("📨  Nueva Notificación");
+        JLabel cardTitle = new JLabel("Nueva Notificación");
         cardTitle.setFont(UIUtils.FONT_HEADER);
         cardTitle.setForeground(UIUtils.PRIMARY);
         cardTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -80,7 +80,7 @@ public class NotificacionesPanel extends JPanel {
         btns.setOpaque(false);
         btns.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton send = UIUtils.primaryButton("📨  Enviar Notificación");
+        JButton send = UIUtils.primaryButton("Enviar Notificación");
         send.setPreferredSize(new Dimension(200, 40));
         send.addActionListener(e -> enviar());
 
@@ -100,10 +100,10 @@ public class NotificacionesPanel extends JPanel {
         templates.add(tplLabel);
 
         String[][] plantillas = {
-            {"📅 Vencimiento próximo", "Tu préstamo está próximo a vencer. Por favor devuelve el libro antes de la fecha límite para evitar sanciones."},
-            {"⚠ Préstamo vencido",     "Tu préstamo ha VENCIDO. Por favor acércate a la biblioteca para regularizar tu situación lo antes posible."},
-            {"✅ Libro disponible",     "Un libro de tu interés ya está disponible en el catálogo. ¡Ingresa al sistema para solicitarlo!"},
-            {"ℹ Mantenimiento",        "El sistema estará en mantenimiento programado. Disculpa los inconvenientes."},
+            {"Vencimiento próximo", "Tu préstamo está próximo a vencer. Por favor devuelve el libro antes de la fecha límite para evitar sanciones."},
+            {"Préstamo vencido",     "Tu préstamo ha VENCIDO. Por favor acércate a la biblioteca para regularizar tu situación lo antes posible."},
+            {"Libro disponible",     "Un libro de tu interés ya está disponible en el catálogo. ¡Ingresa al sistema para solicitarlo!"},
+            {"Mantenimiento",        "El sistema estará en mantenimiento programado. Disculpa los inconvenientes."},
         };
         for (String[] tpl : plantillas) {
             JButton tb = UIUtils.ghostButton(tpl[0]);
@@ -178,11 +178,11 @@ public class NotificacionesPanel extends JPanel {
                 try {
                     get();
                     statusLabel.setForeground(UIUtils.SUCCESS);
-                    statusLabel.setText("✔  Notificación enviada a " + sel.nombre + " exitosamente.");
+                    statusLabel.setText("Notificación enviada a " + sel.nombre + " exitosamente.");
                     mensajeArea.setText("");
                 } catch (Exception e) {
                     statusLabel.setForeground(UIUtils.DANGER);
-                    statusLabel.setText("✘  Error: " + e.getMessage());
+                    statusLabel.setText("Error: " + e.getMessage());
                 }
             }
         }.execute();

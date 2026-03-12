@@ -22,7 +22,6 @@ public class PrestamosController {
     @FXML private TableColumn<PrestamoDto, String> colFechaVence;
     @FXML private TableColumn<PrestamoDto, String> colFechaDevolucion;
     @FXML private TableColumn<PrestamoDto, String> colEstado;
-    @FXML private TableColumn<PrestamoDto, Void> colAccion;
 
     @FXML private ToggleButton btnTodos;
     @FXML private ToggleButton btnActivos;
@@ -54,29 +53,6 @@ public class PrestamosController {
                     case "DEVUELTO" -> setStyle("-fx-text-fill: #27ae60; -fx-font-weight:bold;");
                     default         -> setStyle("");
                 }
-            }
-        });
-
-        // Action column
-        colAccion.setCellFactory(col -> new TableCell<>() {
-            private final Button btn = new Button("Devolver");
-            {
-                btn.getStyleClass().add("btn-table-action");
-                btn.setOnAction(e -> {
-                    PrestamoDto p = getTableView().getItems().get(getIndex());
-                    handleDevolver(p);
-                });
-            }
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) { setGraphic(null); return; }
-                PrestamoDto p = getTableView().getItems().get(getIndex());
-                boolean canReturn = "ACTIVO".equalsIgnoreCase(p.getEstado())
-                        || "VENCIDO".equalsIgnoreCase(p.getEstado());
-                btn.setDisable(!canReturn);
-                btn.setVisible(canReturn);
-                setGraphic(canReturn ? btn : null);
             }
         });
 

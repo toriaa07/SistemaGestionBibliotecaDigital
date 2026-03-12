@@ -23,13 +23,13 @@ public class CategoriasPanel extends JPanel {
     }
 
     private void buildUI() {
-        JPanel header = UIUtils.headerPanel("🏷  Gestión de Categorías",
+        JPanel header = UIUtils.headerPanel("Gestión de Categorías",
                 "Administra las categorías del catálogo de libros");
 
         JPanel btnBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         btnBar.setOpaque(false);
         btnBar.setBorder(BorderFactory.createEmptyBorder(0,0,0,24));
-        JButton btnNuevo = UIUtils.primaryButton("＋  Nueva Categoría");
+        JButton btnNuevo = UIUtils.primaryButton("Nueva Categoría");
         btnNuevo.addActionListener(e -> dialogCategoria(null));
         btnBar.add(btnNuevo);
         header.add(btnBar, BorderLayout.EAST);
@@ -48,8 +48,8 @@ public class CategoriasPanel extends JPanel {
                     boolean sel, boolean foc, int row, int col) {
                 JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 5));
                 p.setBackground(sel ? new Color(232,234,246) : Color.WHITE);
-                JButton e = makeBtn("✏ Editar","#e3f2fd","#1565c0");
-                JButton d = makeBtn("🗑 Eliminar","#ffebee","#b71c1c");
+                JButton e = makeBtn("Editar","#e3f2fd","#1565c0");
+                JButton d = makeBtn("Eliminar","#ffebee","#b71c1c");
                 p.add(e); p.add(d);
                 return p;
             }
@@ -86,7 +86,7 @@ public class CategoriasPanel extends JPanel {
         hint.setLayout(new BoxLayout(hint, BoxLayout.Y_AXIS));
         hint.setPreferredSize(new Dimension(280,0));
 
-        JLabel hTitle = new JLabel("ℹ  Categorías");
+        JLabel hTitle = new JLabel("Categorías");
         hTitle.setFont(UIUtils.FONT_HEADER); hTitle.setForeground(UIUtils.PRIMARY);
         JTextArea hText = new JTextArea(
             "Las categorías permiten organizar y filtrar los libros del catálogo.\n\n" +

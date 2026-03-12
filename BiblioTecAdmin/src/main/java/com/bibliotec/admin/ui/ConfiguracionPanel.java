@@ -22,7 +22,7 @@ public class ConfiguracionPanel extends JPanel {
     }
 
     private void buildUI() {
-        JPanel header = UIUtils.headerPanel("⚙  Configuración del Sistema",
+        JPanel header = UIUtils.headerPanel("Configuración del Sistema",
                 "Parámetros globales de préstamos y notificaciones");
 
         JPanel center = new JPanel(new GridBagLayout());
@@ -37,7 +37,7 @@ public class ConfiguracionPanel extends JPanel {
                 BorderFactory.createEmptyBorder(28,30,28,30)));
         card.setMaximumSize(new Dimension(560, Integer.MAX_VALUE));
 
-        JLabel ct = new JLabel("⚙  Parámetros del Sistema");
+        JLabel ct = new JLabel("Parámetros del Sistema");
         ct.setFont(UIUtils.FONT_HEADER); ct.setForeground(UIUtils.PRIMARY);
         ct.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -69,7 +69,7 @@ public class ConfiguracionPanel extends JPanel {
         statusLabel.setForeground(UIUtils.SUCCESS);
         statusLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton save = UIUtils.primaryButton("💾  Guardar Cambios");
+        JButton save = UIUtils.primaryButton("Guardar Cambios");
         save.setPreferredSize(new Dimension(180, 40));
         save.setAlignmentX(Component.LEFT_ALIGNMENT);
         save.addActionListener(e -> guardar());
@@ -89,7 +89,7 @@ public class ConfiguracionPanel extends JPanel {
         infoBox.setAlignmentX(Component.LEFT_ALIGNMENT);
         infoBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
 
-        JLabel iTitle = new JLabel("ℹ  ¿Cómo funcionan estos parámetros?");
+        JLabel iTitle = new JLabel("¿Cómo funcionan estos parámetros?");
         iTitle.setFont(UIUtils.FONT_LABEL); iTitle.setForeground(new Color(21, 101, 192));
         JTextArea iText = new JTextArea(
             "• Días de préstamo: tiempo máximo que un usuario puede mantener un libro.\n" +
@@ -179,10 +179,10 @@ public class ConfiguracionPanel extends JPanel {
                 try {
                     get();
                     statusLabel.setForeground(UIUtils.SUCCESS);
-                    statusLabel.setText("✔  Configuración guardada exitosamente.");
+                    statusLabel.setText("Configuración guardada exitosamente.");
                 } catch (Exception e) {
                     statusLabel.setForeground(UIUtils.DANGER);
-                    statusLabel.setText("✘  Error: " + e.getMessage());
+                    statusLabel.setText("Error: " + e.getMessage());
                 }
             }
         }.execute();

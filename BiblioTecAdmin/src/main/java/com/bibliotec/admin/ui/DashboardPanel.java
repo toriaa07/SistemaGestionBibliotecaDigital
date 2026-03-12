@@ -22,7 +22,7 @@ public class DashboardPanel extends JPanel {
 
     private void buildUI() {
         // Header
-        JPanel header = UIUtils.headerPanel("📊  Dashboard", "Resumen general del sistema BiblioTec");
+        JPanel header = UIUtils.headerPanel("Dashboard", "Resumen general del sistema BiblioTec");
 
         JPanel inner = new JPanel(new BorderLayout());
         inner.setBackground(UIUtils.BG_LIGHT);
@@ -47,9 +47,9 @@ public class DashboardPanel extends JPanel {
         actionsRow.setOpaque(false);
         actionsRow.setBorder(BorderFactory.createEmptyBorder(16, 0, 0, 0));
 
-        JButton btnVencidos = UIUtils.dangerButton("⚠  Marcar Vencidos");
+        JButton btnVencidos = UIUtils.dangerButton("Marcar Vencidos");
         btnVencidos.addActionListener(e -> marcarVencidos());
-        JButton btnRefresh  = UIUtils.ghostButton("↻  Actualizar");
+        JButton btnRefresh  = UIUtils.ghostButton("Actualizar");
         btnRefresh.addActionListener(e -> loadData());
 
         actionsRow.add(btnVencidos);
@@ -62,7 +62,7 @@ public class DashboardPanel extends JPanel {
                 BorderFactory.createLineBorder(new Color(224,224,224),1,true),
                 BorderFactory.createEmptyBorder(14,18,14,18)));
 
-        JLabel logTitle = new JLabel("📋  Actividad Reciente del Sistema");
+        JLabel logTitle = new JLabel("Actividad Reciente del Sistema");
         logTitle.setFont(UIUtils.FONT_HEADER);
         logTitle.setForeground(UIUtils.PRIMARY);
         logTitle.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
@@ -112,10 +112,10 @@ public class DashboardPanel extends JPanel {
                 counts[2] = activos.size();
                 counts[3] = vencidos.size();
 
-                log.append("✔  Usuarios activos en el sistema:        ").append(counts[0]).append("\n");
-                log.append("✔  Libros activos en catálogo:            ").append(counts[1]).append("\n");
-                log.append("✔  Préstamos activos en curso:            ").append(counts[2]).append("\n");
-                log.append("⚠  Préstamos vencidos pendientes:         ").append(counts[3]).append("\n\n");
+                log.append("Usuarios activos en el sistema:        ").append(counts[0]).append("\n");
+                log.append("Libros activos en catálogo:            ").append(counts[1]).append("\n");
+                log.append("Préstamos activos en curso:            ").append(counts[2]).append("\n");
+                log.append("Préstamos vencidos pendientes:         ").append(counts[3]).append("\n\n");
 
                 // Recent active loans
                 log.append("── Últimos préstamos activos ───────────────────────────────\n");

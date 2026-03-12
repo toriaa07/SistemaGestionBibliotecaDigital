@@ -30,14 +30,14 @@ public class UsuariosPanel extends JPanel {
 
     private void buildUI() {
         // ── Header ───────────────────────────────────
-        JPanel header = UIUtils.headerPanel("👥  Gestión de Usuarios",
+        JPanel header = UIUtils.headerPanel("Gestión de Usuarios",
                 "Crea, edita y administra los usuarios del sistema");
 
         JPanel btnBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         btnBar.setOpaque(false);
         btnBar.setBorder(BorderFactory.createEmptyBorder(0,0,0,24));
 
-        JButton btnNuevo = UIUtils.primaryButton("＋  Nuevo Usuario");
+        JButton btnNuevo = UIUtils.primaryButton("Nuevo Usuario");
         btnNuevo.addActionListener(e -> dialogCrear());
         btnBar.add(btnNuevo);
         header.add(btnBar, BorderLayout.EAST);
@@ -60,7 +60,7 @@ public class UsuariosPanel extends JPanel {
         JButton btnBuscar = UIUtils.ghostButton("Buscar");
         btnBuscar.addActionListener(e -> load());
 
-        filter.add(new JLabel("🔍")); filter.add(searchField);
+        filter.add(new JLabel("Buscar")); filter.add(searchField);
         filter.add(rolBox); filter.add(estadoBox); filter.add(btnBuscar);
 
         // ── Table ─────────────────────────────────────
@@ -143,7 +143,7 @@ public class UsuariosPanel extends JPanel {
                     for (UsuarioDto u : usuarios) {
                         model.addRow(new Object[]{
                             i++, u.getNombre(), u.getCorreo(),
-                            u.getRol(), u.getEstado(), u.getFechaRegistroStr(), "•••"
+                            u.getRol(), u.getEstado(), u.getFechaRegistroStr(), " "
                         });
                     }
                 } catch (Exception e) {

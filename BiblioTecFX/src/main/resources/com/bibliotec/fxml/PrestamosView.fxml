@@ -44,7 +44,6 @@
                 <TableColumn fx:id="colFechaVence" text="Vencimiento" prefWidth="140"/>
                 <TableColumn fx:id="colFechaDevolucion" text="Devolución" prefWidth="130"/>
                 <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
-                <TableColumn fx:id="colAccion" text="Acción" prefWidth="110"/>
             </columns>
         </TableView>
     </VBox>

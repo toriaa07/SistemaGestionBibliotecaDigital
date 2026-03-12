@@ -32,7 +32,7 @@ public class LibrosPanel extends JPanel {
     }
 
     private void buildUI() {
-        JPanel header = UIUtils.headerPanel("📖  Gestión de Libros",
+        JPanel header = UIUtils.headerPanel("Gestión de Libros",
                 "Administra el catálogo completo de libros");
 
         JPanel btnBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
@@ -59,7 +59,7 @@ public class LibrosPanel extends JPanel {
         JButton btnBuscar = UIUtils.ghostButton("Buscar");
         btnBuscar.addActionListener(e -> load());
 
-        filter.add(new JLabel("🔍")); filter.add(searchField);
+        filter.add(new JLabel("Buscar")); filter.add(searchField);
         filter.add(estadoBox); filter.add(btnBuscar);
 
         // Table
@@ -229,7 +229,7 @@ public class LibrosPanel extends JPanel {
         p.add(row1);
 
         p.add(Box.createVerticalStrut(10));
-        p.add(UIUtils.fieldLabel("URL del PDF *")); p.add(Box.createVerticalStrut(3)); p.add(urlF);
+        p.add(UIUtils.fieldLabel("Ruta del PDF *")); p.add(Box.createVerticalStrut(3)); p.add(urlF);
         p.add(Box.createVerticalStrut(10));
         p.add(UIUtils.fieldLabel("Total Ejemplares *")); p.add(Box.createVerticalStrut(3)); p.add(ejF);
         p.add(Box.createVerticalStrut(12));

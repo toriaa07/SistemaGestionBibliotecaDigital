@@ -56,11 +56,11 @@ public class MainFrame extends JFrame {
         header.setMaximumSize(new Dimension(230, 100));
         header.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JLabel icon = new JLabel("📚  BiblioTec");
+        JLabel icon = new JLabel("BiblioTec");
         icon.setFont(new Font("Segoe UI", Font.BOLD, 17));
         icon.setForeground(Color.WHITE);
 
-        JLabel user = new JLabel("👤  " + SessionManager.getInstance().getNombre());
+        JLabel user = new JLabel("  " + SessionManager.getInstance().getNombre());
         user.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         user.setForeground(new Color(144, 164, 174));
 
@@ -80,19 +80,19 @@ public class MainFrame extends JFrame {
         // Section label
         sidebar.add(sectionLabel("MENÚ PRINCIPAL"));
 
-        addNavItem(sidebar, "📊  Dashboard",        "Dashboard",       () -> new DashboardPanel());
-        addNavItem(sidebar, "👥  Usuarios",          "Usuarios",        () -> new UsuariosPanel());
-        addNavItem(sidebar, "📖  Libros",            "Libros",          () -> new LibrosPanel());
-        addNavItem(sidebar, "🔖  Préstamos",         "Préstamos",       () -> new PrestamosPanel());
+        addNavItem(sidebar, "Dashboard",        "Dashboard",       () -> new DashboardPanel());
+        addNavItem(sidebar, "Usuarios",          "Usuarios",        () -> new UsuariosPanel());
+        addNavItem(sidebar, "Libros",            "Libros",          () -> new LibrosPanel());
+        addNavItem(sidebar, "Préstamos",         "Préstamos",       () -> new PrestamosPanel());
 
         sidebar.add(spacer(4));
         sidebar.add(sectionLabel("CATÁLOGO"));
-        addNavItem(sidebar, "🏷  Categorías",        "Categorías",      () -> new CategoriasPanel());
+        addNavItem(sidebar, "Categorías",        "Categorías",      () -> new CategoriasPanel());
 
         sidebar.add(spacer(4));
         sidebar.add(sectionLabel("SISTEMA"));
-        addNavItem(sidebar, "🔔  Notificaciones",    "Notificaciones",  () -> new NotificacionesPanel());
-        addNavItem(sidebar, "⚙  Configuración",     "Configuración",   () -> new ConfiguracionPanel());
+        addNavItem(sidebar, "Notificaciones",    "Notificaciones",  () -> new NotificacionesPanel());
+        addNavItem(sidebar, "Configuración",     "Configuración",   () -> new ConfiguracionPanel());
 
         // Spacer + Logout
         sidebar.add(Box.createVerticalGlue());
@@ -142,7 +142,7 @@ public class MainFrame extends JFrame {
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        JLabel lbl = new JLabel("⬅  Cerrar Sesión");
+        JLabel lbl = new JLabel("Cerrar Sesión");
         lbl.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         lbl.setForeground(new Color(239, 154, 154));
         lbl.setBorder(BorderFactory.createEmptyBorder(11, 22, 11, 22));

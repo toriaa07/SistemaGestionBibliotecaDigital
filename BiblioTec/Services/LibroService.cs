@@ -145,8 +145,6 @@ namespace BiblioTec.Services.Implementations
             await _context.SaveChangesAsync();
         }
     }
-
-    // Clase auxiliar para leer la vista vw_disponibilidad
     internal class VwDisponibilidad
     {
         public int LibroId { get; set; }

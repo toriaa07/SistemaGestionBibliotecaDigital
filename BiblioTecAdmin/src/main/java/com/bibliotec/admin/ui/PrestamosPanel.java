@@ -29,13 +29,13 @@ public class PrestamosPanel extends JPanel {
     }
 
     private void buildUI() {
-        JPanel header = UIUtils.headerPanel("🔖  Gestión de Préstamos",
+        JPanel header = UIUtils.headerPanel("Gestión de Préstamos",
                 "Consulta y administra todos los préstamos del sistema");
 
         JPanel btnBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         btnBar.setOpaque(false);
         btnBar.setBorder(BorderFactory.createEmptyBorder(0,0,0,24));
-        JButton btnVenc = UIUtils.dangerButton("⚠  Marcar Vencidos");
+        JButton btnVenc = UIUtils.dangerButton("Marcar Vencidos");
         btnVenc.addActionListener(e -> marcarVencidos());
         btnBar.add(btnVenc);
         header.add(btnBar, BorderLayout.EAST);
@@ -50,7 +50,7 @@ public class PrestamosPanel extends JPanel {
 
         JButton btnFiltrar = UIUtils.ghostButton("Filtrar");
         btnFiltrar.addActionListener(e -> load());
-        JButton btnRefresh = UIUtils.ghostButton("↻ Actualizar");
+        JButton btnRefresh = UIUtils.ghostButton("Actualizar");
         btnRefresh.addActionListener(e -> load());
 
         filter.add(UIUtils.fieldLabel("Estado:")); filter.add(estadoBox);
@@ -153,7 +153,7 @@ public class PrestamosPanel extends JPanel {
                         model.addRow(new Object[]{
                             i++, p.getNombreUsuario(), p.getTituloLibro(), p.getAutorLibro(),
                             p.getFechaPrestamoStr(), p.getFechaVencimientoStr(),
-                            p.getFechaDevolucionStr(), p.getEstado(), "•••"
+                            p.getFechaDevolucionStr(), p.getEstado(), " "
                         });
                     }
                     table.repaint();

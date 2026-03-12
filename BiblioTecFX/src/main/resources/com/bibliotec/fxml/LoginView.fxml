@@ -52,9 +52,5 @@
                 defaultButton="true">
             <VBox.margin><Insets top="28"/></VBox.margin>
         </Button>
-
-        <Label text="¿No tienes cuenta? Regístrate con un administrador"
-               styleClass="helper-text" style="-fx-padding: 20 0 0 0;"/>
-
     </VBox>
 </HBox>

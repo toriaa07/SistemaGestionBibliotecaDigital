@@ -37,10 +37,6 @@ public class LoginFrame extends JFrame {
         brand.setOpaque(false);
         brand.setLayout(new BoxLayout(brand, BoxLayout.Y_AXIS));
 
-        JLabel icon = new JLabel("📚");
-        icon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 60));
-        icon.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         JLabel title = new JLabel("BiblioTec");
         title.setFont(new Font("Segoe UI", Font.BOLD, 34));
         title.setForeground(Color.WHITE);
@@ -61,7 +57,6 @@ public class LoginFrame extends JFrame {
         school.setForeground(new Color(255, 255, 255, 120));
         school.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        brand.add(icon);
         brand.add(Box.createVerticalStrut(10));
         brand.add(title);
         brand.add(Box.createVerticalStrut(8));
